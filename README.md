@@ -1,5 +1,7 @@
 # SSB meta feed
 
+Status: Design phase
+
 Feeds in SSB are the main abstraction. It is possible to engtangle
 multiple feeds by referencing messages in other feeds, but otherwise
 feeds are independant. Furthermore there is no concept of any kind of
@@ -83,9 +85,6 @@ honst peers would give piece of mind that the data is only stored on a
 certain subset of the whole network.
 
 # Acknowledgments and prior work
-
-Earlier thread(%L9m5nHRqpXM4Zkha1ENTk5wNOXQMduve8Hc9+F0RLZI=.sha256)
-on SSB discussing partial replication.
 
 CFT suggested the use of meta feeds
 [in](https://github.com/arj03/ssb-observables/issues/1)
