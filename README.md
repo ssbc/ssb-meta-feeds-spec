@@ -81,3 +81,11 @@ list to a feed and only distribute this feed to people on the allow
 list. As with ephemeral feeds, this cannot be enforced, but assuming
 honst peers would give piece of mind that the data is only stored on a
 certain subset of the whole network.
+
+# Acknowledgments and prior work
+
+Earlier thread(%L9m5nHRqpXM4Zkha1ENTk5wNOXQMduve8Hc9+F0RLZI=.sha256)
+on SSB discussing partial replication.
+
+CFT suggested the use of meta feeds
+[in](https://github.com/arj03/ssb-observables/issues/1)
