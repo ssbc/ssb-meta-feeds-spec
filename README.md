@@ -10,11 +10,11 @@ feed is about, the format of the messages or other things people might
 come up with.
 
 Over time a number of different use cases for reasoning about how
-multiple feeds relates has come up. This includes same-as where
-multiple devices has independent feeds, but can be seen as belonging
-to the same physical person. Feed rotation for switching to a newer
-message type. Or it might be being able to say something about a
-subset of messages from a feed (a claim), that will enable partial
+multiple feeds relate to each other has come up. This includes same-as
+where multiple devices has independent feeds, but can be seen as
+belonging to the same physical person. Feed rotation for switching to
+a newer feed format. Or it might be being able to say something about
+a subset of messages from a feed (a claim), that will enable partial
 replication of those messages.
 
 Another aspect of existing feeds in SSB is that they tie the identity
