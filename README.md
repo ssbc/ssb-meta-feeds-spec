@@ -18,23 +18,23 @@ a subset of messages from a feed (a claim), that would enable partial
 replication of those messages.
 
 Another aspect of existing feeds in SSB is that they conflate the identity
-of the feed together with the contents of the feed. This makes same-as
-solutions more difficult.
+of the feed together with the contents of the feed.
 
 While adding a new core abstraction to SSB can be seen as a big
 change, we believe the abstraction adds enough expressive power which
 makes up for it's potential complications.
 
-A meta feed consists of a master key and a state. The master key is
+A meta feed consists of a meta key and a state. The meta key is
 the only key able to update the state. State is defined as a number of
 feeds with an identifier and a set of metadata fields. The metadata
 fields are left open to the implementation.
 
-FIXME: define what the state is exactly and how it is updated
+FIXME: define what the state is exactly and how it is updated. Is it
+just a feed?
 
 When migrating from an existing SSB feed to a meta feed, for
-simplicity the master key would be the same as the original feed. For
-new feeds the master key should be different an used to derive keys
+simplicity the meta key would be the same as the original feed. For
+new feeds the meta key should be different an used to derive keys
 for the sub feeds. FIXME: @keks?
 
 Once you start talking about multiple feeds that might relate to the
@@ -45,19 +45,11 @@ so you don't end up with duplicate messages.
 Let us see how we can use the above abstraction to solve several
 common examples:
 
-## Same-as
-
-Same-as (defined as the case where it would be ok that multiple feeds
-would be under the control of one master key) could be implemented
-by adding the different feeds to the meta feed and assigning metadata
-to them which would define them all as active. If a device is lost
-it is simply removed from the state. This of course assumes that
-the master key is stored in a safe place and is never lost.
-
 ## New feed format
 
 Changing to a new feed format could be implemented by adding a new
-feed to the state and assigning that as active.
+feed to the state, adding a message pointing to the new feed as the
+last message and assigning the new feed as active.
 
 In case of backwards compability with clients that does not support a
 newer feed format or in the case of only wanting to support newer feed
