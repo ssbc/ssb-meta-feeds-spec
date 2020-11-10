@@ -70,9 +70,9 @@ never as a proof that some messages were not left out. Naturally this
 comes down to trust then. Using the friend graph would be natural, as
 would having multiple author staking claims and entangling them.
 
-## Subfeed
+## Sub feeds
 
-Similar to claims it would be possible to create subfeeds that would
+Similar to claims it would be possible to create sub feeds that would
 only contain certain messages. This might be useful for specific apps
 or other use cases. Another use case for this would be curated
 content, where specific messages are picked out that might be of
@@ -83,9 +83,6 @@ particular interesting to a certain application or specific people.
 Using the metadata it would be possible to attach a lifetime to feeds,
 meaning honest peers would delete the feeds after a specific time.
 
-FIXME: consider the broader consequences of ephemeral feeds. Maybe
-they can only be used in limited circumstances.
-
 ## Allow list
 
 Similar to ephemeral feeds it would be possible to attach an allow
@@ -94,6 +91,17 @@ list. As with ephemeral feeds, this cannot be enforced, but assuming
 honest peers would give piece of mind that the data is only stored on
 a certain subset of the whole network. This can naturally be combined
 with private groups to better ensure safety.
+
+# Open questions
+
+- In the case of claims, how are bad actors handled?
+- What are the broader consequences of ephemeral feeds. Maybe they can
+only be used in limited circumstances, and if so which ones?
+- For sub feeds and feed rotation what is the best way to handle
+  potentially overlapping messages
+- In the case of claims, what is the overhead of writing a new feed
+  compared to just sending the messages from the original feed
+  directly?
 
 # Acknowledgments and prior work
 
