@@ -4,14 +4,14 @@ Status: Design phase
 
 Feeds in SSB are the main abstraction. It is possible to entangle
 multiple feeds by referencing messages in other feeds, but otherwise
-feeds are independant. Furthermore there is no concept of any kind of
+feeds are independent. Furthermore there is no concept of any kind of
 metadata about a feed. This could be the lifetime of a feed, what the
 feed is about, the format of the messages or other things people might
 come up with.
 
 Over time a number of different use cases for reasoning about how
 multiple feeds relates has come up. This includes same-as where
-multiple devices has independant feeds, but can be seen as belonging
+multiple devices has independent feeds, but can be seen as belonging
 to the same physical person. Feed rotation for switching to a newer
 message type. Or it might be being able to say something about a
 subset of messages from a feed (a claim), that will enable partial
