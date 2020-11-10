@@ -12,10 +12,13 @@ come up with.
 Over time a number of different use cases for reasoning about how
 multiple feeds relates has come up. This includes same-as where
 multiple devices has independant feeds, but can be seen as belonging
-to the same physical person. This includes feed rotation for switching
-to a newer message type. Or it might be being able to say something
-about a subset of messages from a feed (a claim), that will enable
-partial replication of those messages.
+to the same physical person. Feed rotation for switching to a newer
+message type. Or it might be being able to say something about a
+subset of messages from a feed (a claim), that will enable partial
+replication of those messages.
+
+Another aspect of existing feeds in SSB is that they tie the identity
+of the feed together with the contents of the feed.
 
 While adding a new core abstraction to SSB can be seen as a big
 change, we believe the abstraction adds enough expressive power that
@@ -43,30 +46,37 @@ common examples:
 
 ## Same-as
 
-Same-as could work by adding the different feeds to the meta feed and
+Same-as (defined as the case where it would be ok that multiple feeds
+would be under the control of one master key) could be implemented
+using this by adding the different feeds to the meta feed and
 assigning them metadata that would define them all as active. If a
-device is lots it is simply removed from the state. This of course
+device is lost it is simply removed from the state. This of course
 assumes that the master key is stored in a safe place and is never
 lost.
 
 ## New feed format
 
 Changing to a new feed format could be implemented by adding a new
-feed to the state and assigning that as active. Assuming one would
-still want to keep updating the old feed for backwards compability
-with some clients, newer clients could store multiple feeds for
-replication purposes and only write one of them to their log. Lower
-end clients could offload this extra storage requirement to larger
-peers in the network.
+feed to the state and assigning that as active. 
+
+In case of backwards compability with clients that does not support a
+newer feed format or in the case of only wanting to support newer feed
+formats, maintaining muliple feeds with the same content would be an
+interesting avenue to explore. As the hash of the messages in the two
+feeds would be different, there could be a way to include the hash of
+the corresponding message in old feed in the newer feed.
+
+Lower end clients could offload this extra storage requirement to
+larger peers in the network.
 
 ## Claims
 
 If one would like to replicate a specific part of a feed, such as the
 contact messages, one could request another peer to generate a feed
 that only contains these messages. This would only act as a claim,
-never a proof that messages was not left out. Naturally here we come
-down to trust. Using the friend graph would be natural, as would
-having multiple author staking claims and entangling these.
+never a proof that some messages were not left out. Naturally this
+come down to trust then. Using the friend graph would be natural, as
+would having multiple author staking claims and entangling these.
 
 ## Subfeed
 
@@ -81,13 +91,17 @@ particular interesting to a certain application or specific people.
 Using the metadata it would be possible to attach a lifetime to feeds,
 meaning honest peers would delete the feeds after a specific time.
 
+FIXME: consider the broader consequences of ephemeral feeds. Maybe
+they can only be used in limited circumstances.
+
 ## Allow list
 
 Similar to ephemeral feeds it would be possible to attach an allow
 list to a feed and only distribute this feed to people on the allow
 list. As with ephemeral feeds, this cannot be enforced, but assuming
-honst peers would give piece of mind that the data is only stored on a
-certain subset of the whole network.
+honest peers would give piece of mind that the data is only stored on
+a certain subset of the whole network. This come naturally be combined
+with private groups to better ensure safety.
 
 # Acknowledgments and prior work
 
