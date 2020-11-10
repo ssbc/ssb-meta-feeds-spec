@@ -28,6 +28,11 @@ fields are left open to the implementation.
 
 FIXME: define what the state is exactly and how it is updated
 
+When migrating from an existing SSB feed to a meta feed, for
+simplicity the master key would be the same as the original feed. For
+new feeds the master key should be different an used to derive keys
+for the sub feeds. FIXME: keks?
+
 Once you start talking about multiple feeds that might relate to the
 same thing (say contact messages of a feed) is becomes very important
 what the purpose of the feeds are and how they are stored so you don't
