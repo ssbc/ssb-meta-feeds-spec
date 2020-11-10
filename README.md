@@ -2,7 +2,7 @@
 
 Status: Design phase
 
-Feeds in SSB are the main abstraction. It is possible to engtangle
+Feeds in SSB are the main abstraction. It is possible to entangle
 multiple feeds by referencing messages in other feeds, but otherwise
 feeds are independant. Furthermore there is no concept of any kind of
 metadata about a feed. This could be the lifetime of a feed, what the
