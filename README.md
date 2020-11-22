@@ -13,34 +13,85 @@ Over time a number of different use cases for reasoning about how
 multiple feeds relate to each other has come up. This includes same-as
 where multiple devices have independent feeds, but can be seen as
 belonging to the same physical person. Feed rotation for switching to
-a newer feed format. Or it might give the ablity to say something about
-a subset of messages from a feed (a claim), that would enable partial
-replication of those messages.
+a newer feed format. Or the ablity to say something about a subset of
+messages from a feed (a claim), that would enable partial replication
+of those messages.
 
 Another aspect of existing feeds in SSB is that they conflate the identity
 of the feed together with the contents of the feed.
 
+A meta feed is a special kind of feed that only contains references
+and maintains metadata about other feeds. As such it also has its own
+keypair that defines its identity. Naturally a meta feed can also
+reference other meta feeds and thus can be used to build a tree. The
+current state of a meta feed, meaning what other feeds it references
+and their state, is the reduced state of all changes on the
+feed. Because a meta feed is just a series of messages they can be
+private or part of a group.
+
+## Example of a meta feed
+
+An example of a main feed referencing an ordinary feed and two meta
+feeds. 
+
+![Diagram](./metafeed-example1.svg)
+
+Contents of messages in meta feed that acts as meta data for feeds:
+```
+Main: {type: add, feedtype: classic, id: @main}
+MainContacts: {type: add, feedtype: bamboo, id:@mc, query: "type=contact,author=@main"}
+NewMain: {type: add, feedtype: bamboo, id: @main2}
+```
+
+Type can be: `add`, `update`, `remove`
+
+## Claims example
+
+An example of the MainContacts meta feed with 3 claims from different
+meta feeds about the same feed, with 1 claim removed so the final
+state would be 2 claims.
+
+![Diagram2](./metafeed-example2.svg)
+
+Contents of messages:
+```
+Claim1: {type: add, feedtype: classic, id: @claim, query: "type=contact,author=@main"}
+Claim2: {type: add, feedtype: classic, id: @other, metafeed: @MF2, query: "type=contact,author=@main"}
+Claim3: {type: add, feedtype: bamboo, id: @third, metafeed: @MF3, query: "type=contact,author=@main"}
+Remove Claim2: {type: remove, msgid: %idOfClaim2Msg }
+```
+
+Here Claim1 does not include a metafeed attribute as its from the same
+meta feed.
+
 While adding a new core abstraction to SSB can be seen as a big
-change, we believe the abstraction adds enough expressive power which
-makes up for it's potential complications.
-
-A meta feed consists of a meta key and a state. The meta key is
-the only key able to update the state. State is defined as a number of
-feeds with an identifier and a set of metadata fields. The metadata
-fields are left open to the implementation.
-
-FIXME: define what the state is exactly and how it is updated. Is it
-just a feed?
-
-When migrating from an existing SSB feed to a meta feed, for
-simplicity the meta key would be the same as the original feed. For
-new feeds the meta key should be different an used to derive keys
-for the sub feeds. FIXME: @keks?
+change, we believe the abstraction adds enough expressive power to
+make up for it's potential complications.
 
 Once you start talking about multiple feeds that might relate to the
-same thing (say contact messages of a feed) is becomes very important
-what the purpose of the feeds are and how they are stored and referenced
-so you don't end up with duplicate messages.
+same thing (say contact messages of a feed) it would be natural that
+these feeds only contain the hash of the messages not the message
+itself. This cuts down the storage overhead and makes them easier to
+check.
+
+## Key management, identity and metadata
+
+As mentioned earlier in classical SSB, the feed identity is the same
+as the feed. Here instead we want to decouple the identity and
+feeds. This means that the identity will be tied to an orignal
+key. This key is used to generate all other keys in a deterministic
+way using the method described in [BIP32-Ed25519]. It is worth noting
+that the method can be used to generate subkeys from derived
+keys.
+
+For the sake of simplicity, when migrating from an existing SSB feed
+to a meta feed, the meta key will be the same as the original
+feed. This is to ensure the identity stays the same.
+
+The key of a feed is uniquely defined by its position in the
+tree. This also gives a canonical place to store metadata about the
+feed. Meaning a feed could reside in two different subfeeds, and the
+metadata of the first place would be authorative of its metadata.
 
 Let us see how we can use the above abstraction to solve several
 common examples:
@@ -48,8 +99,9 @@ common examples:
 ## New feed format
 
 Changing to a new feed format could be implemented by adding a new
-feed to the state, adding a message pointing to the new feed as the
-last message and assigning the new feed as active.
+feed to the meta feed state, and by adding a message to the old feed
+pointing to the new feed as the last message and assigning the new
+feed as active in the meta feed.
 
 In case of backwards compability with clients that does not support a
 newer feed format or in the case of only wanting to support newer feed
@@ -65,10 +117,12 @@ larger peers in the network.
 
 If one would like to replicate a specific part of a feed, such as the
 contact messages, one could request another peer to generate a feed
-that only contains these messages. This would only act as a claim,
-never as a proof that some messages were not left out. Naturally this
-comes down to trust then. Using the friend graph would be natural, as
-would having multiple author staking claims and entangling them.
+that only references these messages. Then when exchanging data, the
+original messages could be included as auxiliary data. This would only
+act as a claim, never as a proof that some messages were not left
+out. Naturally this comes down to trust then. Using the friend graph
+would be natural, as would having multiple author staking claims and
+entangling them.
 
 ## Sub feeds
 
@@ -92,6 +146,22 @@ honest peers would give piece of mind that the data is only stored on
 a certain subset of the whole network. This can naturally be combined
 with private groups to better ensure safety.
 
+## Same-as
+
+While there are different ways to solve the problem of multiple feeds
+belonging to the same physical person. We are going to sketch two
+possible solutions here in very broad terms.
+
+One solution would be to derive a key for each device from the main
+key and transfer those to the devices out of band. Or to simply
+collect the device ids. In any case, the main feed would maintain a
+subfeed with all the devices listed. The main feed would then be
+authorative of which devices constitute same-as.
+
+Another option would be to have each device main a list of other keys
+they consider same-as. If they are all in agreement the feeds would be
+considered the same.
+
 # Open questions
 
 - In the case of claims, how are bad actors handled?
@@ -99,11 +169,10 @@ with private groups to better ensure safety.
 only be used in limited circumstances, and if so which ones?
 - For sub feeds and feed rotation what is the best way to handle
   potentially overlapping messages
-- In the case of claims, what is the overhead of writing a new feed
-  compared to just sending the messages from the original feed
-  directly?
 
 # Acknowledgments and prior work
 
 CFT suggested the use of meta feeds
 [in](https://github.com/arj03/ssb-observables/issues/1)
+
+[BIP32-Ed25519]: https://github.com/wallet-io/bip32-ed25519/blob/master/doc/Ed25519_BIP.pdf
