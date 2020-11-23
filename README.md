@@ -36,7 +36,6 @@ feeds.
 
 ![Diagram](./metafeed-example1.svg)
 <details>
-```graphviz 
 digraph metafeed {
 
   rankdir=LR
@@ -49,7 +48,6 @@ digraph metafeed {
   a:ref:c -> b:data [arrowhead=vee, arrowtail=dot, dir=both];
   b:ref:c -> c:data [arrowhead=vee, arrowtail=dot, dir=both];
 }
-```
 </details>
 
 Contents of messages in meta feed that acts as meta data for feeds:
@@ -71,7 +69,6 @@ is not a good claim any longer.
 
 ![Diagram2](./metafeed-example2.svg)
 <details>
-```graphviz 
 digraph contacts {
 
   rankdir=LR
@@ -87,7 +84,6 @@ digraph contacts {
   b:ref:c -> c:data [arrowhead=vee, arrowtail=dot, dir=both];
   c:ref:d -> d:data [arrowhead=vee, arrowtail=dot, dir=both];
 }
-```
 </details>
 
 Contents of messages:
