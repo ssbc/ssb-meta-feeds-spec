@@ -38,15 +38,15 @@ feeds.
 <details>
 digraph metafeed {
 
-  rankdir=LR
+  rankdir=RL
   node [shape=record];
-
+  
   edge [tailclip=false];
-  a [label="{ <data> Main | <ref> }"]
-  b [label="{ <data> MainContacts | <ref> }"];
-  c [label="{ <data> NewMain | <ref> }"];
-  a:ref:c -> b:data [arrowhead=vee, arrowtail=dot, dir=both];
-  b:ref:c -> c:data [arrowhead=vee, arrowtail=dot, dir=both];
+  a [label="{ <ref> | <data> Main }"]
+  b [label="{ <ref> | <data> MainContacts }"];
+  c [label="{ <ref> | <data> NewMain }"];
+  c:ref:b -> b:data [arrowhead=vee, arrowtail=dot, dir=both];
+  b:ref:a -> a:data [arrowhead=vee, arrowtail=dot, dir=both];
 }
 </details>
 
@@ -71,18 +71,18 @@ is not a good claim any longer.
 <details>
 digraph contacts {
 
-  rankdir=LR
+  rankdir=RL
   nodesep=0.6
   node [shape=record];
 
   edge [tailclip=false];
-  a [label="{ <data> Claim1 | <ref> }"]
-  b [label="{ <data> Claim2 | <ref> }"];
-  c [label="{ <data> Claim3 | <ref> }"];
-  d [label="{ <data> Remove Claim2 | <ref> }"];
-  a:ref:c -> b:data [arrowhead=vee, arrowtail=dot, dir=both];
-  b:ref:c -> c:data [arrowhead=vee, arrowtail=dot, dir=both];
-  c:ref:d -> d:data [arrowhead=vee, arrowtail=dot, dir=both];
+  a [label="{ <ref> | <data> Claim1 }"]
+  b [label="{ <ref> | <data> Claim2 }"];
+  c [label="{ <ref> | <data> Claim3 }"];
+  d [label="{ <ref> | <data> Remove Claim2 }"];
+  d:ref:c -> c:data [arrowhead=vee, arrowtail=dot, dir=both];
+  c:ref:b -> b:data [arrowhead=vee, arrowtail=dot, dir=both];
+  b:ref:a -> a:data [arrowhead=vee, arrowtail=dot, dir=both];
 }
 </details>
 

@@ -6,54 +6,54 @@
 <g id="node1" class="node">
 <title>a</title>
 <polygon fill="none" stroke="#000000" points="0,-.5 0,-36.5 76.723,-36.5 76.723,-.5 0,-.5"></polygon>
-<text text-anchor="middle" x="28.6115" y="-14.4" font-family="Times,serif" font-size="14.00" fill="#000000">Claim1</text>
-<polyline fill="none" stroke="#000000" points="57.223,-.7 57.223,-36.5 "></polyline>
-<text text-anchor="middle" x="66.973" y="-14.4" font-family="Times,serif" font-size="14.00" fill="#000000"> </text>
+<text text-anchor="middle" x="9.75" y="-14.4" font-family="Times,serif" font-size="14.00" fill="#000000"> </text>
+<polyline fill="none" stroke="#000000" points="19.5,-.7 19.5,-36.5 "></polyline>
+<text text-anchor="middle" x="48.1115" y="-14.4" font-family="Times,serif" font-size="14.00" fill="#000000">Claim1</text>
 </g>
 <!-- b -->
 <g id="node2" class="node">
 <title>b</title>
 <polygon fill="none" stroke="#000000" points="112.723,-.5 112.723,-36.5 189.446,-36.5 189.446,-.5 112.723,-.5"></polygon>
-<text text-anchor="middle" x="141.3345" y="-14.4" font-family="Times,serif" font-size="14.00" fill="#000000">Claim2</text>
-<polyline fill="none" stroke="#000000" points="169.946,-.7 169.946,-36.5 "></polyline>
-<text text-anchor="middle" x="179.696" y="-14.4" font-family="Times,serif" font-size="14.00" fill="#000000"> </text>
+<text text-anchor="middle" x="122.473" y="-14.4" font-family="Times,serif" font-size="14.00" fill="#000000"> </text>
+<polyline fill="none" stroke="#000000" points="132.223,-.7 132.223,-36.5 "></polyline>
+<text text-anchor="middle" x="160.8345" y="-14.4" font-family="Times,serif" font-size="14.00" fill="#000000">Claim2</text>
 </g>
-<!-- a&#45;&gt;b -->
-<g id="edge1" class="edge">
-<title>a:c-&gt;b:data</title>
-<path fill="none" stroke="#000000" d="M75.4557,-18.5C82.3095,-18.5 92.6367,-18.5 102.931,-18.5"></path>
-<ellipse fill="#000000" stroke="#000000" cx="71.3615" cy="-18.5" rx="4" ry="4"></ellipse>
-<polygon fill="#000000" stroke="#000000" points="113.0845,-18.5 103.0845,-23.0001 108.0845,-18.5 103.0845,-18.5001 103.0845,-18.5001 103.0845,-18.5001 108.0845,-18.5 103.0845,-14.0001 113.0845,-18.5 113.0845,-18.5"></polygon>
+<!-- b&#45;&gt;a -->
+<g id="edge3" class="edge">
+<title>b:a-&gt;a:data</title>
+<path fill="none" stroke="#000000" d="M113.9903,-18.5C107.1365,-18.5 96.8093,-18.5 86.515,-18.5"></path>
+<ellipse fill="#000000" stroke="#000000" cx="118.0845" cy="-18.5" rx="4" ry="4"></ellipse>
+<polygon fill="#000000" stroke="#000000" points="76.3615,-18.5 86.3615,-14.0001 81.3615,-18.5 86.3615,-18.5001 86.3615,-18.5001 86.3615,-18.5001 81.3615,-18.5 86.3615,-23.0001 76.3615,-18.5 76.3615,-18.5"></polygon>
 </g>
 <!-- c -->
 <g id="node3" class="node">
 <title>c</title>
 <polygon fill="none" stroke="#000000" points="225.446,-.5 225.446,-36.5 302.169,-36.5 302.169,-.5 225.446,-.5"></polygon>
-<text text-anchor="middle" x="254.0575" y="-14.4" font-family="Times,serif" font-size="14.00" fill="#000000">Claim3</text>
-<polyline fill="none" stroke="#000000" points="282.669,-.7 282.669,-36.5 "></polyline>
-<text text-anchor="middle" x="292.419" y="-14.4" font-family="Times,serif" font-size="14.00" fill="#000000"> </text>
+<text text-anchor="middle" x="235.196" y="-14.4" font-family="Times,serif" font-size="14.00" fill="#000000"> </text>
+<polyline fill="none" stroke="#000000" points="244.946,-.7 244.946,-36.5 "></polyline>
+<text text-anchor="middle" x="273.5575" y="-14.4" font-family="Times,serif" font-size="14.00" fill="#000000">Claim3</text>
 </g>
-<!-- b&#45;&gt;c -->
+<!-- c&#45;&gt;b -->
 <g id="edge2" class="edge">
-<title>b:c-&gt;c:data</title>
-<path fill="none" stroke="#000000" d="M188.1787,-18.5C195.0325,-18.5 205.3597,-18.5 215.654,-18.5"></path>
-<ellipse fill="#000000" stroke="#000000" cx="184.0845" cy="-18.5" rx="4" ry="4"></ellipse>
-<polygon fill="#000000" stroke="#000000" points="225.8075,-18.5 215.8075,-23.0001 220.8075,-18.5 215.8075,-18.5001 215.8075,-18.5001 215.8075,-18.5001 220.8075,-18.5 215.8075,-14.0001 225.8075,-18.5 225.8075,-18.5"></polygon>
+<title>c:b-&gt;b:data</title>
+<path fill="none" stroke="#000000" d="M226.7133,-18.5C219.8595,-18.5 209.5323,-18.5 199.238,-18.5"></path>
+<ellipse fill="#000000" stroke="#000000" cx="230.8075" cy="-18.5" rx="4" ry="4"></ellipse>
+<polygon fill="#000000" stroke="#000000" points="189.0845,-18.5 199.0845,-14.0001 194.0845,-18.5 199.0845,-18.5001 199.0845,-18.5001 199.0845,-18.5001 194.0845,-18.5 199.0845,-23.0001 189.0845,-18.5 189.0845,-18.5"></polygon>
 </g>
 <!-- d -->
 <g id="node4" class="node">
 <title>d</title>
 <polygon fill="none" stroke="#000000" points="338.169,-.5 338.169,-36.5 465.0484,-36.5 465.0484,-.5 338.169,-.5"></polygon>
-<text text-anchor="middle" x="391.8587" y="-14.4" font-family="Times,serif" font-size="14.00" fill="#000000">Remove Claim2</text>
-<polyline fill="none" stroke="#000000" points="445.5484,-.7 445.5484,-36.5 "></polyline>
-<text text-anchor="middle" x="455.2984" y="-14.4" font-family="Times,serif" font-size="14.00" fill="#000000"> </text>
+<text text-anchor="middle" x="347.919" y="-14.4" font-family="Times,serif" font-size="14.00" fill="#000000"> </text>
+<polyline fill="none" stroke="#000000" points="357.669,-.7 357.669,-36.5 "></polyline>
+<text text-anchor="middle" x="411.3587" y="-14.4" font-family="Times,serif" font-size="14.00" fill="#000000">Remove Claim2</text>
 </g>
-<!-- c&#45;&gt;d -->
-<g id="edge3" class="edge">
-<title>c:d-&gt;d:data</title>
-<path fill="none" stroke="#000000" d="M300.9155,-18.5C307.7811,-18.5 318.1259,-18.5 328.4378,-18.5"></path>
-<ellipse fill="#000000" stroke="#000000" cx="296.8075" cy="-18.5" rx="4" ry="4"></ellipse>
-<polygon fill="#000000" stroke="#000000" points="338.6087,-18.5 328.6087,-23.0001 333.6087,-18.5 328.6087,-18.5001 328.6087,-18.5001 328.6087,-18.5001 333.6087,-18.5 328.6087,-14.0001 338.6087,-18.5 338.6087,-18.5"></polygon>
+<!-- d&#45;&gt;c -->
+<g id="edge1" class="edge">
+<title>d:c-&gt;c:data</title>
+<path fill="none" stroke="#000000" d="M339.5007,-18.5C332.6351,-18.5 322.2903,-18.5 311.9784,-18.5"></path>
+<ellipse fill="#000000" stroke="#000000" cx="343.6087" cy="-18.5" rx="4" ry="4"></ellipse>
+<polygon fill="#000000" stroke="#000000" points="301.8075,-18.5 311.8075,-14.0001 306.8075,-18.5 311.8075,-18.5001 311.8075,-18.5001 311.8075,-18.5001 306.8075,-18.5 311.8075,-23.0001 301.8075,-18.5 301.8075,-18.5"></polygon>
 </g>
 </g>
 </svg>
