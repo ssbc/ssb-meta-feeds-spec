@@ -49,20 +49,25 @@ Type can be: `add`, `update`, `remove`
 
 An example of the MainContacts meta feed with 3 claims from different
 meta feeds about the same feed, with 1 claim removed so the final
-state would be 2 claims.
+state would be 2 claims. Removing Claim2 could be because the metafeed
+stopped updating the feed for an extended period of time and thus
+is not a good claim any longer.
 
 ![Diagram2](./metafeed-example2.svg)
 
 Contents of messages:
 ```
 Claim1: {type: add, feedtype: classic, id: @claim, query: "type=contact,author=@main"}
-Claim2: {type: add, feedtype: classic, id: @other, metafeed: @MF2, query: "type=contact,author=@main"}
-Claim3: {type: add, feedtype: bamboo, id: @third, metafeed: @MF3, query: "type=contact,author=@main"}
+Claim2: {type: add, feedtype: classic, id: @other, metafeed: @MF2}
+Claim3: {type: add, feedtype: bamboo, id: @third, metafeed: @MF3}
 Remove Claim2: {type: remove, msgid: %idOfClaim2Msg }
 ```
 
 Here Claim1 does not include a metafeed attribute as its from the same
-meta feed.
+meta feed. Notice Claim2 and Claim3 does not include any other
+metadata than the feed type and a link to where the feed can be found
+(id + metafeed). The feed type is for convenience, the canonical
+location of metadata for a feed is in the metafeed it was posted.
 
 While adding a new core abstraction to SSB can be seen as a big
 change, we believe the abstraction adds enough expressive power to
@@ -90,8 +95,8 @@ feed. This is to ensure the identity stays the same.
 
 The key of a feed is uniquely defined by its position in the
 tree. This also gives a canonical place to store metadata about the
-feed. Meaning a feed could reside in two different subfeeds, and the
-metadata of the first place would be authorative of its metadata.
+feed. The feed could reside in another subfeed but from the key one
+knows that this is not the authorative place for its metadata.
 
 Let us see how we can use the above abstraction to solve several
 common examples:
