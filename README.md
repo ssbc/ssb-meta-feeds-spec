@@ -35,6 +35,22 @@ An example of a main feed referencing an ordinary feed and two meta
 feeds. 
 
 ![Diagram](./metafeed-example1.svg)
+<details>
+```graphviz 
+digraph metafeed {
+
+  rankdir=LR
+  node [shape=record];
+
+  edge [tailclip=false];
+  a [label="{ <data> Main | <ref> }"]
+  b [label="{ <data> MainContacts | <ref> }"];
+  c [label="{ <data> NewMain | <ref> }"];
+  a:ref:c -> b:data [arrowhead=vee, arrowtail=dot, dir=both];
+  b:ref:c -> c:data [arrowhead=vee, arrowtail=dot, dir=both];
+}
+```
+</details>
 
 Contents of messages in meta feed that acts as meta data for feeds:
 ```
@@ -54,6 +70,25 @@ stopped updating the feed for an extended period of time and thus
 is not a good claim any longer.
 
 ![Diagram2](./metafeed-example2.svg)
+<details>
+```graphviz 
+digraph contacts {
+
+  rankdir=LR
+  nodesep=0.6
+  node [shape=record];
+
+  edge [tailclip=false];
+  a [label="{ <data> Claim1 | <ref> }"]
+  b [label="{ <data> Claim2 | <ref> }"];
+  c [label="{ <data> Claim3 | <ref> }"];
+  d [label="{ <data> Remove Claim2 | <ref> }"];
+  a:ref:c -> b:data [arrowhead=vee, arrowtail=dot, dir=both];
+  b:ref:c -> c:data [arrowhead=vee, arrowtail=dot, dir=both];
+  c:ref:d -> d:data [arrowhead=vee, arrowtail=dot, dir=both];
+}
+```
+</details>
 
 Contents of messages:
 ```
