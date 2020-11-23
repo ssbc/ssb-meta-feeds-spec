@@ -112,6 +112,9 @@ check.
 
 ## Key management, identity and metadata
 
+FIXME: this section has some flaws that was pointed out by @keks, we
+are working on a better model.
+
 As mentioned earlier in classical SSB, the feed identity is the same
 as the feed. Here instead we want to decouple the identity and
 feeds. This means that the identity will be tied to an orignal
@@ -129,10 +132,12 @@ tree. This also gives a canonical place to store metadata about the
 feed. The feed could reside in another subfeed but from the key one
 knows that this is not the authorative place for its metadata.
 
+## Use cases
+
 Let us see how we can use the above abstraction to solve several
 common examples:
 
-## New feed format
+### New feed format
 
 Changing to a new feed format could be implemented by adding a new
 feed to the meta feed state, and by adding a message to the old feed
@@ -149,7 +154,7 @@ the corresponding message in old feed in the newer feed.
 Lower end clients could offload this extra storage requirement to
 larger peers in the network.
 
-## Claims
+### Claims
 
 If one would like to replicate a specific part of a feed, such as the
 contact messages, one could request another peer to generate a feed
@@ -160,7 +165,7 @@ out. Naturally this comes down to trust then. Using the friend graph
 would be natural, as would having multiple author staking claims and
 entangling them.
 
-## Sub feeds
+### Sub feeds
 
 Similar to claims it would be possible to create sub feeds that would
 only contain certain messages. This might be useful for specific apps
@@ -168,12 +173,12 @@ or other use cases. Another use case for this would be curated
 content, where specific messages are picked out that might be of
 particular interesting to a certain application or specific people.
 
-## Ephemeral feeds
+### Ephemeral feeds
 
 Using the metadata it would be possible to attach a lifetime to feeds,
 meaning honest peers would delete the feeds after a specific time.
 
-## Allow list
+### Allow list
 
 Similar to ephemeral feeds it would be possible to attach an allow
 list to a feed and only distribute this feed to people on the allow
@@ -182,7 +187,7 @@ honest peers would give piece of mind that the data is only stored on
 a certain subset of the whole network. This can naturally be combined
 with private groups to better ensure safety.
 
-## Same-as
+### Same-as
 
 While there are different ways to solve the problem of multiple feeds
 belonging to the same physical person. We are going to sketch two
@@ -198,7 +203,7 @@ Another option would be to have each device main a list of other keys
 they consider same-as. If they are all in agreement the feeds would be
 considered the same.
 
-# Open questions
+## Open questions
 
 - In the case of claims, how are bad actors handled?
 - What are the broader consequences of ephemeral feeds. Maybe they can
@@ -206,7 +211,7 @@ only be used in limited circumstances, and if so which ones?
 - For sub feeds and feed rotation what is the best way to handle
   potentially overlapping messages
 
-# Acknowledgments and prior work
+## Acknowledgments and prior work
 
 CFT suggested the use of meta feeds
 [in](https://github.com/arj03/ssb-observables/issues/1)
