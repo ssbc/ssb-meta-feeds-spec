@@ -197,7 +197,7 @@ collect the device ids. In any case, the main feed would maintain a
 subfeed with all the devices listed. The main feed would then be
 authorative of which devices constitute same-as.
 
-Another option would be to have each device main a list of other keys
+Another option would be to have each device maintain a list of other keys
 they consider same-as. If they are all in agreement the feeds would be
 considered the same.
 
