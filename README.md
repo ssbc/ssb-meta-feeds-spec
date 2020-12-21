@@ -114,7 +114,7 @@ check.
 
 As mentioned earlier in classical SSB, the feed identity is the same
 as the feed. Here instead we want to decouple the identity and
-feeds. This means that the identity will be tied to an orignal
+feeds. This means that the identity will be tied to an original
 key. This key is used to generate all other keys in a deterministic
 way using the method described in the [meeting
 notes](./meeting-notes-arj-keks-2020-11-24). It is worth noting that
@@ -166,10 +166,11 @@ entangling them.
 ### Sub feeds
 
 Similar to claims it would be possible to create sub feeds that would
-only contain certain messages. This might be useful for specific apps
-or other use cases. Another use case for this would be curated
-content, where specific messages are picked out that might be of
-particular interesting to a certain application or specific people.
+only contain certain messages. This might be useful for specific
+apps. Another use case for this would be curated content, where
+specific messages are picked out that might be of particular interest
+to a certain application or specific people, or say messages within
+the last year.
 
 ### Ephemeral feeds
 
