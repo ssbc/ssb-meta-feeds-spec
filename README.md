@@ -55,7 +55,7 @@ digraph metafeed {
 Contents of the messages in the meta feed that acts as meta data for feeds:
 ```
 Main: { type: add, feedtype: classic, id: @main }
-Derived: { type: add, feedtype: bamboo, id:@derived }
+Derived: { type: add, feedtype: bamboo, id: @derived }
 Linked: { type: add, feedtype: classic, id: @linked }
 ```
 
