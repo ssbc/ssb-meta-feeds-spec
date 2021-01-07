@@ -31,8 +31,10 @@ is just a series of messages they can be private or part of a group.
 
 ## Example of a meta feed
 
-An example of a main feed referencing an ordinary feed and two meta
-feeds. 
+An example of a main feed with 3 feeds: a main feed, a derived meta
+feed for feeds derived from other feeds and a Linked meta feed that
+contains other feeds this identity is linked to. This could include
+other SSB ids or cabal hypercore feed ids or any other feeds.
 
 ![Diagram](./metafeed-example1.svg)
 <details>
@@ -43,33 +45,31 @@ digraph metafeed {
   
   edge [tailclip=false];
   a [label="{ <ref> | <data> Main }"]
-  b [label="{ <ref> | <data> MainContacts }"];
-  c [label="{ <ref> | <data> NewMain }"];
+  b [label="{ <ref> | <data> Derived }"];
+  c [label="{ <ref> | <data> Linked }"];
   c:ref:b -> b:data [arrowhead=vee, arrowtail=dot, dir=both];
   b:ref:a -> a:data [arrowhead=vee, arrowtail=dot, dir=both];
 }
+```
 </details>
 
-Contents of messages in meta feed that acts as meta data for feeds:
+Contents of the messages in the meta feed that acts as meta data for feeds:
 ```
-Main: {type: add, feedtype: classic, id: @main}
-MainContacts: {type: add, feedtype: bamboo, id:@mc, query: "type=contact,author=@main"}
-NewMain: {type: add, feedtype: bamboo, id: @main2}
+Main: { type: add, feedtype: classic, id: @main }
+Derived: { type: add, feedtype: bamboo, id:@derived }
+Linked: { type: add, feedtype: classic, id: @linked }
 ```
 
-Type can be: `add`, `update`, `remove`
+Type can be: `add`, `update`, `remove`.
 
 ## Claims example
 
-An example of the MainContacts meta feed with 3 claims from different
-meta feeds about the same feed, with 1 claim removed so the final
-state would be 2 claims. Removing Claim2 could be because the metafeed
-stopped updating the feed for an extended period of time and thus
-is not a good claim any longer.
+An example of the Derived meta feed with two claims about different 
+subsets of the main feed and a derived feed from another feed.
 
 ![Diagram2](./metafeed-example2.svg)
 <details>
-digraph contacts {
+digraph Derived {
 
   rankdir=RL
   nodesep=0.6
@@ -79,8 +79,6 @@ digraph contacts {
   a [label="{ <ref> | <data> Claim1 }"]
   b [label="{ <ref> | <data> Claim2 }"];
   c [label="{ <ref> | <data> Claim3 }"];
-  d [label="{ <ref> | <data> Remove Claim2 }"];
-  d:ref:c -> c:data [arrowhead=vee, arrowtail=dot, dir=both];
   c:ref:b -> b:data [arrowhead=vee, arrowtail=dot, dir=both];
   b:ref:a -> a:data [arrowhead=vee, arrowtail=dot, dir=both];
 }
@@ -88,17 +86,14 @@ digraph contacts {
 
 Contents of messages:
 ```
-Claim1: {type: add, feedtype: classic, id: @claim, query: "type=contact,author=@main"}
-Claim2: {type: add, feedtype: classic, id: @other, metafeed: @MF2}
-Claim3: {type: add, feedtype: bamboo, id: @third, metafeed: @MF3}
-Remove Claim2: {type: remove, msgid: %idOfClaim2Msg }
+Claim1: { type: add, feedtype: classic, id: @claim1, query: "and(type(contact),author(@main))" }
+Claim2: { type: add, feedtype: classic, id: @claim2, query: "and(type(about),author(@main))" }
+Claim3: { type: add, feedtype: classic, id: @claim3, query: "and(type(about),author(@mobile))" }
 ```
 
-Here Claim1 does not include a metafeed attribute as its from the same
-meta feed. Notice Claim2 and Claim3 does not include any other
-metadata than the feed type and a link to where the feed can be found
-(id + metafeed). The feed type is for convenience, the canonical
-location of metadata for a feed is in the metafeed it was posted.
+These are claims because a malicious user could leave out messages and
+claim to be a proper subset.
+
 
 While adding a new core abstraction to SSB can be seen as a big
 change, we believe the abstraction adds enough expressive power to

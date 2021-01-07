@@ -1,7 +1,7 @@
-<svg width="351pt" height="45pt" viewBox="0.00 0.00 350.57 45.00" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+<svg width="301pt" height="45pt" viewBox="0.00 0.00 300.79 45.00" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
 <g id="graph0" class="graph" transform="scale(1 1) rotate(0) translate(4 41)">
 <title>metafeed</title>
-<polygon fill="#ffffff" stroke="transparent" points="-4,4 -4,-41 346.5688,-41 346.5688,4 -4,4"></polygon>
+<polygon fill="#ffffff" stroke="transparent" points="-4,4 -4,-41 296.7946,-41 296.7946,4 -4,4"></polygon>
 <!-- a -->
 <g id="node1" class="node">
 <title>a</title>
@@ -13,32 +13,32 @@
 <!-- b -->
 <g id="node2" class="node">
 <title>b</title>
-<polygon fill="none" stroke="#000000" points="101.0498,-.5 101.0498,-36.5 215.0912,-36.5 215.0912,-.5 101.0498,-.5"></polygon>
+<polygon fill="none" stroke="#000000" points="101.0498,-.5 101.0498,-36.5 181.6368,-36.5 181.6368,-.5 101.0498,-.5"></polygon>
 <text text-anchor="middle" x="110.7998" y="-14.4" font-family="Times,serif" font-size="14.00" fill="#000000"> </text>
 <polyline fill="none" stroke="#000000" points="120.5498,-.7 120.5498,-36.5 "></polyline>
-<text text-anchor="middle" x="167.8205" y="-14.4" font-family="Times,serif" font-size="14.00" fill="#000000">MainContacts</text>
+<text text-anchor="middle" x="151.0933" y="-14.4" font-family="Times,serif" font-size="14.00" fill="#000000">Derived</text>
 </g>
 <!-- b&#45;&gt;a -->
 <g id="edge2" class="edge">
 <title>b:a-&gt;a:data</title>
-<path fill="none" stroke="#000000" d="M102.9236,-18.5C96.0252,-18.5 85.6308,-18.5 75.2694,-18.5"></path>
-<ellipse fill="#000000" stroke="#000000" cx="107.0705" cy="-18.5" rx="4" ry="4"></ellipse>
+<path fill="none" stroke="#000000" d="M102.3252,-18.5C95.5357,-18.5 85.3055,-18.5 75.1079,-18.5"></path>
+<ellipse fill="#000000" stroke="#000000" cx="106.3433" cy="-18.5" rx="4" ry="4"></ellipse>
 <polygon fill="#000000" stroke="#000000" points="65.0498,-18.5 75.0498,-14.0001 70.0498,-18.5 75.0498,-18.5001 75.0498,-18.5001 75.0498,-18.5001 70.0498,-18.5 75.0498,-23.0001 65.0498,-18.5 65.0498,-18.5"></polygon>
 </g>
 <!-- c -->
 <g id="node3" class="node">
 <title>c</title>
-<polygon fill="none" stroke="#000000" points="251.0912,-.5 251.0912,-36.5 342.5688,-36.5 342.5688,-.5 251.0912,-.5"></polygon>
-<text text-anchor="middle" x="260.8412" y="-14.4" font-family="Times,serif" font-size="14.00" fill="#000000"> </text>
-<polyline fill="none" stroke="#000000" points="270.5912,-.7 270.5912,-36.5 "></polyline>
-<text text-anchor="middle" x="306.58" y="-14.4" font-family="Times,serif" font-size="14.00" fill="#000000">NewMain</text>
+<polygon fill="none" stroke="#000000" points="217.6368,-.5 217.6368,-36.5 292.7946,-36.5 292.7946,-.5 217.6368,-.5"></polygon>
+<text text-anchor="middle" x="227.3868" y="-14.4" font-family="Times,serif" font-size="14.00" fill="#000000"> </text>
+<polyline fill="none" stroke="#000000" points="237.1368,-.7 237.1368,-36.5 "></polyline>
+<text text-anchor="middle" x="264.9657" y="-14.4" font-family="Times,serif" font-size="14.00" fill="#000000">Linked</text>
 </g>
 <!-- c&#45;&gt;b -->
 <g id="edge1" class="edge">
 <title>c:b-&gt;b:data</title>
-<path fill="none" stroke="#000000" d="M252.7294,-18.5C245.8701,-18.5 235.5346,-18.5 225.2321,-18.5"></path>
-<ellipse fill="#000000" stroke="#000000" cx="256.83" cy="-18.5" rx="4" ry="4"></ellipse>
-<polygon fill="#000000" stroke="#000000" points="215.0705,-18.5 225.0705,-14.0001 220.0705,-18.5 225.0705,-18.5001 225.0705,-18.5001 225.0705,-18.5001 220.0705,-18.5 225.0705,-23.0001 215.0705,-18.5 215.0705,-18.5"></polygon>
+<path fill="none" stroke="#000000" d="M219.0951,-18.5C212.2188,-18.5 201.8579,-18.5 191.53,-18.5"></path>
+<ellipse fill="#000000" stroke="#000000" cx="223.2157" cy="-18.5" rx="4" ry="4"></ellipse>
+<polygon fill="#000000" stroke="#000000" points="181.3433,-18.5 191.3433,-14.0001 186.3433,-18.5 191.3433,-18.5001 191.3433,-18.5001 191.3433,-18.5001 186.3433,-18.5 191.3433,-23.0001 181.3433,-18.5 181.3433,-18.5"></polygon>
 </g>
 </g>
 </svg>

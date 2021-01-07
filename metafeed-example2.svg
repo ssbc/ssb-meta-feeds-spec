@@ -1,7 +1,7 @@
-<svg width="473pt" height="45pt" viewBox="0.00 0.00 473.05 45.00" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+<svg width="310pt" height="45pt" viewBox="0.00 0.00 310.17 45.00" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
 <g id="graph0" class="graph" transform="scale(1 1) rotate(0) translate(4 41)">
-<title>contacts</title>
-<polygon fill="#ffffff" stroke="transparent" points="-4,4 -4,-41 469.0484,-41 469.0484,4 -4,4"></polygon>
+<title>Derived</title>
+<polygon fill="#ffffff" stroke="transparent" points="-4,4 -4,-41 306.169,-41 306.169,4 -4,4"></polygon>
 <!-- a -->
 <g id="node1" class="node">
 <title>a</title>
@@ -19,7 +19,7 @@
 <text text-anchor="middle" x="160.8345" y="-14.4" font-family="Times,serif" font-size="14.00" fill="#000000">Claim2</text>
 </g>
 <!-- b&#45;&gt;a -->
-<g id="edge3" class="edge">
+<g id="edge2" class="edge">
 <title>b:a-&gt;a:data</title>
 <path fill="none" stroke="#000000" d="M113.9903,-18.5C107.1365,-18.5 96.8093,-18.5 86.515,-18.5"></path>
 <ellipse fill="#000000" stroke="#000000" cx="118.0845" cy="-18.5" rx="4" ry="4"></ellipse>
@@ -34,26 +34,11 @@
 <text text-anchor="middle" x="273.5575" y="-14.4" font-family="Times,serif" font-size="14.00" fill="#000000">Claim3</text>
 </g>
 <!-- c&#45;&gt;b -->
-<g id="edge2" class="edge">
+<g id="edge1" class="edge">
 <title>c:b-&gt;b:data</title>
 <path fill="none" stroke="#000000" d="M226.7133,-18.5C219.8595,-18.5 209.5323,-18.5 199.238,-18.5"></path>
 <ellipse fill="#000000" stroke="#000000" cx="230.8075" cy="-18.5" rx="4" ry="4"></ellipse>
 <polygon fill="#000000" stroke="#000000" points="189.0845,-18.5 199.0845,-14.0001 194.0845,-18.5 199.0845,-18.5001 199.0845,-18.5001 199.0845,-18.5001 194.0845,-18.5 199.0845,-23.0001 189.0845,-18.5 189.0845,-18.5"></polygon>
-</g>
-<!-- d -->
-<g id="node4" class="node">
-<title>d</title>
-<polygon fill="none" stroke="#000000" points="338.169,-.5 338.169,-36.5 465.0484,-36.5 465.0484,-.5 338.169,-.5"></polygon>
-<text text-anchor="middle" x="347.919" y="-14.4" font-family="Times,serif" font-size="14.00" fill="#000000"> </text>
-<polyline fill="none" stroke="#000000" points="357.669,-.7 357.669,-36.5 "></polyline>
-<text text-anchor="middle" x="411.3587" y="-14.4" font-family="Times,serif" font-size="14.00" fill="#000000">Remove Claim2</text>
-</g>
-<!-- d&#45;&gt;c -->
-<g id="edge1" class="edge">
-<title>d:c-&gt;c:data</title>
-<path fill="none" stroke="#000000" d="M339.5007,-18.5C332.6351,-18.5 322.2903,-18.5 311.9784,-18.5"></path>
-<ellipse fill="#000000" stroke="#000000" cx="343.6087" cy="-18.5" rx="4" ry="4"></ellipse>
-<polygon fill="#000000" stroke="#000000" points="301.8075,-18.5 311.8075,-14.0001 306.8075,-18.5 311.8075,-18.5001 311.8075,-18.5001 311.8075,-18.5001 306.8075,-18.5 311.8075,-23.0001 301.8075,-18.5 301.8075,-18.5"></polygon>
 </g>
 </g>
 </svg>
