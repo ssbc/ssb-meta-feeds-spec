@@ -59,7 +59,8 @@ Derived: { type: add, feedtype: bamboo, id:@derived }
 Linked: { type: add, feedtype: classic, id: @linked }
 ```
 
-Type can be: `add`, `update`, `remove`.
+Type can be: `add`, `update`, `remove`. Update can be used to overwrite or 
+extend the metadata of a feed.
 
 ## Claims example
 
