@@ -50,7 +50,6 @@ digraph metafeed {
   c:ref:b -> b:data [arrowhead=vee, arrowtail=dot, dir=both];
   b:ref:a -> a:data [arrowhead=vee, arrowtail=dot, dir=both];
 }
-```
 </details>
 
 Contents of the messages in the meta feed that acts as meta data for feeds:
