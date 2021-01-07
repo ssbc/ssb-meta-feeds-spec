@@ -21,7 +21,7 @@ Another aspect of existing feeds in SSB is that they conflate the identity
 of the feed together with the contents of the feed.
 
 A meta feed is mainly meant to be used on a single device and is a
-special kind of feed that only contains references and maintains
+special kind of feed that only contains references to and maintains
 metadata about other feeds. As such it also has its own keypair that
 defines its identity. Naturally a meta feed can also reference other
 meta feeds and thus can be used to build a tree. The current state of
@@ -112,14 +112,14 @@ check.
 
 ## Key management, identity and metadata
 
-As mentioned earlier in classical SSB, the feed identity is the same
+As mentioned earlier, in classical SSB the feed identity is the same
 as the feed. Here instead we want to decouple the identity and
 feeds. This means that the identity will be tied to an original
 key. This key is used to generate all other keys in a deterministic
 way using the method described in the [meeting
 notes](./meeting-notes-arj-keks-2020-11-24). It is worth noting that
-the method can be used to generate subkeys from derived keys. It was
-considered to use [BIP32-Ed25519] but that method has a weaker
+the method can be used to generate subkeys from derived keys. Using
+[BIP32-Ed25519] instead was considered but that method has a weaker
 security model in the case of a key compromised where keys are shared
 between devices.
 
