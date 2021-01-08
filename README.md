@@ -59,12 +59,13 @@ Derived: { type: add, feedtype: bamboo, id: @derived }
 Linked: { type: add, feedtype: classic, id: @linked }
 ```
 
-Type can be: `add`, `update`, `remove`. Update can be used to overwrite or 
-extend the metadata of a feed.
+Type can be: `add`, `update`, `remove`. Update can be used to
+overwrite or extend the metadata of a feed. Note the signatures (see
+key management section) are left out.
 
 ## Claims example
 
-An example of the Derived meta feed with two claims about different 
+An example of the Derived meta feed with two claims about different
 subsets of the main feed and a derived feed from another feed.
 
 ![Diagram2](./metafeed-example2.svg)
