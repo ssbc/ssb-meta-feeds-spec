@@ -31,7 +31,7 @@ is just a series of messages they can be private or part of a group.
 
 ## Example of a meta feed
 
-An example of a main feed with 3 feeds: a main feed, a derived meta
+An example of a meta feed with 3 feeds: a main feed, a derived meta
 feed for feeds derived from other feeds and a Linked meta feed that
 contains other feeds this identity is linked to. This could include
 other SSB ids or cabal hypercore feed ids or any other feeds.
