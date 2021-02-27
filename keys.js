@@ -17,8 +17,13 @@ console.log("seed", ikm.toString('hex'))
 const salt = 'ssbc'
 const hash = 'SHA-256'
 
+const lhash  = 'sha256'
+const hash_len = hkdf.hash_length(lhash)
+const prk = hkdf.extract(lhash, hash_len, ikm, salt)
+
 const mf_info = "ssb-meta-feed-seed-v1:metafeed"
-const mf_seed = hkdf(ikm, length, {salt, mf_info, hash})
+//const mf_seed = hkdf(ikm, length, {salt, mf_info, hash})
+const mf_seed = hkdf.expand(lhash, hash_len, prk, length, mf_info);
 
 console.log("mf seed", mf_seed)
 
@@ -26,13 +31,6 @@ const mf_key = ssbKeys.generate("ed25519", mf_seed)
 console.log("mf_key", mf_key)
 
 const sf_info = "ssb-meta-feed-seed-v1:subfeed-1"
-
-const lhash  = 'sha256'
-const hash_len = hkdf.hash_length(lhash)
-
-// this always returns the same?
-const prk = hkdf.extract(lhash, hash_len, ikm, salt)
-console.log("prk", prk)
 
 const sf_seed = hkdf.expand(lhash, hash_len, prk, length, sf_info);
 
