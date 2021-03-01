@@ -31,7 +31,7 @@ is just a series of messages they can be private or part of a group.
 
 ## Example of a meta feed
 
-An example of a meta feed with 3 feeds: a main feed, a derived meta
+An example of a meta feed linking 3 feeds: a Main feed, a Derived meta
 feed for feeds derived from other feeds and a Linked meta feed that
 contains other feeds this identity is linked to.
 
@@ -55,9 +55,9 @@ Contents of the messages in the meta feed that acts as meta data for
 feeds:
 
 ```
-Main: { type: 'metafeed', operation: 'add', feedtype: 'classic', purpose: 'main', id: '@main' }
-Derived: { type: 'metafeed', operation: 'add', feedtype: 'bamboo', purpose: 'derived', id: '@derived' }
-Linked: { type: 'metafeed', operation: 'add', feedtype: 'classic', purpose: 'linked', id: '@linked' }
+{ type: 'metafeed', operation: 'add', feedtype: 'classic', purpose: 'Main', id: '@main' }
+{ type: 'metafeed', operation: 'add', feedtype: 'bamboo', purpose: 'Derived', id: '@derived' }
+{ type: 'metafeed', operation: 'add', feedtype: 'classic', purpose: 'Linked', id: '@linked' }
 ```
 
 Operation can be: `add`, `update`, `remove`. Update can be used to
