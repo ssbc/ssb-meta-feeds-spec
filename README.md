@@ -17,8 +17,8 @@ a newer feed format. Or the ablity to say something about a subset of
 messages from a feed (a claim), that would enable partial replication
 of those messages.
 
-Another aspect of existing feeds in SSB is that they conflate the identity
-of the feed together with the contents of the feed.
+Another aspect of existing feeds in SSB is that they conflate the
+identity of the feed together with the contents of the feed.
 
 A meta feed is mainly meant to be used on a single device and is a
 special kind of feed that only contains references to and maintains
@@ -33,8 +33,7 @@ is just a series of messages they can be private or part of a group.
 
 An example of a meta feed with 3 feeds: a main feed, a derived meta
 feed for feeds derived from other feeds and a Linked meta feed that
-contains other feeds this identity is linked to. This could include
-other SSB ids or cabal hypercore feed ids or any other feeds.
+contains other feeds this identity is linked to.
 
 ![Diagram](./metafeed-example1.svg)
 <details>
@@ -52,14 +51,16 @@ digraph metafeed {
 }
 </details>
 
-Contents of the messages in the meta feed that acts as meta data for feeds:
+Contents of the messages in the meta feed that acts as meta data for
+feeds:
+
 ```
-Main: { type: add, feedtype: classic, id: @main }
-Derived: { type: add, feedtype: bamboo, id: @derived }
-Linked: { type: add, feedtype: classic, id: @linked }
+Main: { type: 'metafeed', operation: 'add', feedtype: 'classic', purpose: 'main', id: '@main' }
+Derived: { type: 'metafeed', operation: 'add', feedtype: 'bamboo', purpose: 'derived', id: '@derived' }
+Linked: { type: 'metafeed', operation: 'add', feedtype: 'classic', purpose: 'linked', id: '@linked' }
 ```
 
-Type can be: `add`, `update`, `remove`. Update can be used to
+Operation can be: `add`, `update`, `remove`. Update can be used to
 overwrite or extend the metadata of a feed. Note the signatures (see
 key management section) are left out.
 
@@ -87,18 +88,13 @@ digraph Derived {
 
 Contents of messages:
 ```
-Claim1: { type: add, feedtype: classic, id: @claim1, query: "and(type(contact),author(@main))" }
-Claim2: { type: add, feedtype: classic, id: @claim2, query: "and(type(about),author(@main))" }
-Claim3: { type: add, feedtype: classic, id: @claim3, query: "and(type(about),author(@mobile))" }
+Claim1: { type: 'metafeed', operation: 'add', feedtype: 'classic', id: '@claim1', query: 'and(type(contact),author(@main))' }
+Claim2: { type: 'metafeed', operation: 'add', feedtype: 'classic', id: '@claim2', query: 'and(type(about),author(@main))' }
+Claim3: { type: 'metafeed', operation: 'add', feedtype: 'classic', id: '@claim3', query: 'and(type(about),author(@mobile))' }
 ```
 
 These are claims because a malicious user could leave out messages and
 claim to be a proper subset.
-
-
-While adding a new core abstraction to SSB can be seen as a big
-change, we believe the abstraction adds enough expressive power to
-make up for it's potential complications.
 
 Once you start talking about multiple feeds that might relate to the
 same thing (say contact messages of a feed) it would be natural that
@@ -110,17 +106,77 @@ check.
 
 As mentioned earlier, in classical SSB the feed identity is the same
 as the feed. Here instead we want to decouple the identity and
-feeds. This means that the identity will be tied to an original
-key. This key is used to generate all other keys in a deterministic
-way using the method described in the [meeting
-notes](./meeting-notes-arj-keks-2020-11-24). It is worth noting that
-the method can be used to generate subkeys from derived keys. Using
-[BIP32-Ed25519] instead was considered but that method has a weaker
-security model in the case of a key compromised where keys are shared
-between devices.
+feeds. 
 
-The meeting notes also describes a method for reusing an existing
-ed25519 key as the main feed on the meta feed.
+### Existing SSB feed
+
+To generate a meta feed and link that to the main feed, first a seed
+is generated:
+
+```
+const seed = crypto.randomBytes(32)
+```
+
+From this seed, a meta feed can be generated using:
+
+```
+const mf_info = "ssb-meta-feed-seed-v1:metafeed"
+const mf_seed = hkdf.expand(hash, hash_len, prk, length, mf_info)
+const mf_key = ssbKeys.generate("ed25519", mf_seed)
+```
+
+We then encrypt the seed as a private message to the main feed. By
+doing this we allow the main feed to reconstruct the meta feed and all
+from sub feeds from this seed.
+
+Then the meta feed is linked with the main feed using a new message on
+the meta feed signed by both the main feed and the meta feed:
+
+```
+MF: [{ 
+  content: {
+      type: 'metafeed',
+      operation: 'add',
+      feedtype: 'clasic',
+      purpose: 'main',
+      id: '@main',
+      author: '@mf', 
+      nonce: '<rand>', 
+      sign_sf: suf_sf.sig
+  },
+  sig_mf:sig_mf.sig
+}]
+```
+
+Here sign_sf is a signature by of main feed of the fields above it in
+the message (FIXME: precise definition). And sig_mf is the normal
+signature of the message on the meta feed.
+
+FIXME: the main feed should post a public message stating it's meta
+feed so other can find it
+
+### New SSB feed
+
+A new feed starts by constructing a seed. From this seed both the meta
+feed and the main feed are generated. The main feed should use the
+info: "ssb-meta-feed-seed-v1:subfeed-1".
+
+The seed will also be encrypted to the main feed and the meta feed
+linked to the main feed.
+
+### Identity
+
+By building a layer on top of existing feeds we maintain backwards
+compatible with existing clients. The identity will still be that of
+the main feed, this means that the following graph and secret
+handshake will continue working as before, but what we have added is a
+mechanism for creating other feeds and have them linked to the main
+feed.
+
+It is worth noting that the method can be used to generate subkeys
+from derived keys. Using [BIP32-Ed25519] instead was considered but
+that method has a weaker security model in the case of a key
+compromised where keys are shared between devices.
 
 If a key is reused in another part of the tree it should include a
 reference to the original subfeed or metafeed it was defined in. The
