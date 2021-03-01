@@ -93,14 +93,14 @@ Contents of messages:
 { type: 'metafeed', operation: 'add', feedtype: 'classic', id: '@claim3', query: 'and(type(about),author(@mobile))' }
 ```
 
-These are claims because a malicious user could leave out messages and
-claim to be a proper subset.
+As a malicious user could leave out messages, these can only be
+claims.
 
 Once you start talking about multiple feeds that might relate to the
-same thing (say contact messages of a feed) it would be natural that
-these feeds only contain the hash of the messages not the message
-itself. This cuts down the storage overhead and makes them easier to
-check.
+same thing (say contact messages of a feed) it is natural that these
+feeds only contain the hash of the messages and not the messages
+themselves. This cuts down the storage overhead and makes them easier
+to check.
 
 ## Key management, identity and metadata
 
