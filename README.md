@@ -88,9 +88,9 @@ digraph Derived {
 
 Contents of messages:
 ```
-Claim1: { type: 'metafeed', operation: 'add', feedtype: 'classic', id: '@claim1', query: 'and(type(contact),author(@main))' }
-Claim2: { type: 'metafeed', operation: 'add', feedtype: 'classic', id: '@claim2', query: 'and(type(about),author(@main))' }
-Claim3: { type: 'metafeed', operation: 'add', feedtype: 'classic', id: '@claim3', query: 'and(type(about),author(@mobile))' }
+{ type: 'metafeed', operation: 'add', feedtype: 'classic', id: '@claim1', query: 'and(type(contact),author(@main))' }
+{ type: 'metafeed', operation: 'add', feedtype: 'classic', id: '@claim2', query: 'and(type(about),author(@main))' }
+{ type: 'metafeed', operation: 'add', feedtype: 'classic', id: '@claim3', query: 'and(type(about),author(@mobile))' }
 ```
 
 These are claims because a malicious user could leave out messages and
