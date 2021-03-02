@@ -173,6 +173,12 @@ handshake will continue working as before, but what we have added is a
 mechanism for creating other feeds and have them linked to the main
 feed.
 
+It is worth noting that even though the examples above specify ways to
+generate new feeds from a single seed, it is perfectly fine and in
+some cases a good idea to generate an feed not from this seed. So that
+in the case of the main key being broken or stolen, you don't loose
+everything.
+
 It is worth noting that the method can be used to generate subkeys
 from derived keys. Using [BIP32-Ed25519] instead was considered but
 that method has a weaker security model in the case of a key
