@@ -1,4 +1,5 @@
 const crypto = require("crypto")
+// use https://www.npmjs.com/package/derive-key instead
 const hkdf = require('futoin-hkdf')
 const ssbKeys = require('ssb-keys')
 
