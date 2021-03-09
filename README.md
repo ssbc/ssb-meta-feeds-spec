@@ -32,9 +32,9 @@ group.
 
 ## Example of a meta feed
 
-An example of a meta feed linking 3 feeds: a Main feed, a Claims meta
-feed for claims about feeds and a Linked meta feed that contains other
-feeds this identity is linked to.
+An example of a meta feed linking 3 feeds: a main feed, a claims meta
+feed and a linked meta feed that contains other feeds this identity is
+linked to.
 
 ![Diagram](./metafeed-example1.svg)
 <details>
@@ -44,9 +44,9 @@ digraph metafeed {
   node [shape=record];
   
   edge [tailclip=false];
-  a [label="{ <ref> | <data> Main }"]
-  b [label="{ <ref> | <data> Claims }"];
-  c [label="{ <ref> | <data> Linked }"];
+  a [label="{ <ref> | <data> main }"]
+  b [label="{ <ref> | <data> claims }"];
+  c [label="{ <ref> | <data> linked }"];
   c:ref:b -> b:data [arrowhead=vee, arrowtail=dot, dir=both];
   b:ref:a -> a:data [arrowhead=vee, arrowtail=dot, dir=both];
 }
@@ -56,9 +56,9 @@ Contents of the messages in the meta feed that acts as meta data for
 feeds:
 
 ```
-{ type: 'metafeed', operation: 'add', feedtype: 'classic', purpose: 'Main', id: '@main' }
-{ type: 'metafeed', operation: 'add', feedtype: 'bamboo', purpose: 'Claims', id: '@claim' }
-{ type: 'metafeed', operation: 'add', feedtype: 'classic', purpose: 'Linked', id: '@linked' }
+{ type: 'metafeed', operation: 'add', feedtype: 'classic', purpose: 'main', id: '@main' }
+{ type: 'metafeed', operation: 'add', feedtype: 'bamboo', purpose: 'claims', id: '@claim' }
+{ type: 'metafeed', operation: 'add', feedtype: 'classic', purpose: 'linked', id: '@linked' }
 ```
 
 Operation can be: `add`, `update`, `remove`. Update can be used to
@@ -67,7 +67,7 @@ key management section) are left out.
 
 ## Claims example
 
-An example of the Claims meta feed with two claims about different
+An example of the claims meta feed with two claims about different
 subsets of the main feed and a claim feed a subset of messages in
 another feed.
 
