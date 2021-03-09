@@ -56,9 +56,9 @@ Contents of the messages in the meta feed that acts as meta data for
 feeds:
 
 ```
-{ type: 'metafeed', operation: 'add', feedtype: 'classic', purpose: 'main', id: '@main' }
-{ type: 'metafeed', operation: 'add', feedtype: 'bamboo', purpose: 'claims', id: '@claim' }
-{ type: 'metafeed', operation: 'add', feedtype: 'classic', purpose: 'linked', id: '@linked' }
+{ type: 'metafeed/operation', operation: 'add', feedtype: 'classic', purpose: 'main', id: '@main' }
+{ type: 'metafeed/operation', operation: 'add', feedtype: 'bamboo', purpose: 'claims', id: '@claim' }
+{ type: 'metafeed/operation', operation: 'add', feedtype: 'classic', purpose: 'linked', id: '@linked' }
 ```
 
 Operation can be: `add`, `update`, `remove`. Update can be used to
@@ -90,9 +90,9 @@ digraph Derived {
 
 Contents of messages:
 ```
-{ type: 'metafeed', operation: 'add', feedtype: 'classic', id: '@claim1', query: 'and(type(contact),author(@main))' }
-{ type: 'metafeed', operation: 'add', feedtype: 'classic', id: '@claim2', query: 'and(type(about),author(@main))' }
-{ type: 'metafeed', operation: 'add', feedtype: 'classic', id: '@claim3', query: 'and(type(about),author(@mobile))' }
+{ type: 'metafeed/operation', operation: 'add', feedtype: 'classic', id: '@claim1', query: 'and(type(contact),author(@main))' }
+{ type: 'metafeed/operation', operation: 'add', feedtype: 'classic', id: '@claim2', query: 'and(type(about),author(@main))' }
+{ type: 'metafeed/operation', operation: 'add', feedtype: 'classic', id: '@claim3', query: 'and(type(about),author(@mobile))' }
 ```
 
 As a malicious user could leave out messages, these can only be
