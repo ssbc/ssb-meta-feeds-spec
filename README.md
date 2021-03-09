@@ -14,8 +14,8 @@ multiple feeds relate to each other has come up. This includes same-as
 where multiple devices have independent feeds, but can be seen as
 belonging to the same physical person. Feed rotation for switching to
 a newer feed format. Or the ablity to say something about a subset of
-messages from a feed (a claim), that would enable partial replication
-of those messages.
+messages from a feed (a claim or index), that would enable partial
+replication of those messages.
 
 Another aspect of existing feeds in SSB is that they conflate the
 identity of the feed together with the contents of the feed.
@@ -27,13 +27,14 @@ defines its identity. Naturally a meta feed can also reference other
 meta feeds and thus can be used to build a tree. The current state of
 a meta feed, meaning what other feeds it references and their state,
 is the reduced state of all changes on the feed. Because a meta feed
-is just a series of messages they can be private or part of a group.
+is just a series of messages they can be private or part of a private
+group.
 
 ## Example of a meta feed
 
-An example of a meta feed linking 3 feeds: a Main feed, a Derived meta
-feed for feeds derived from other feeds and a Linked meta feed that
-contains other feeds this identity is linked to.
+An example of a meta feed linking 3 feeds: a Main feed, a Claims meta
+feed for claims about feeds and a Linked meta feed that contains other
+feeds this identity is linked to.
 
 ![Diagram](./metafeed-example1.svg)
 <details>
@@ -44,7 +45,7 @@ digraph metafeed {
   
   edge [tailclip=false];
   a [label="{ <ref> | <data> Main }"]
-  b [label="{ <ref> | <data> Derived }"];
+  b [label="{ <ref> | <data> Claims }"];
   c [label="{ <ref> | <data> Linked }"];
   c:ref:b -> b:data [arrowhead=vee, arrowtail=dot, dir=both];
   b:ref:a -> a:data [arrowhead=vee, arrowtail=dot, dir=both];
@@ -56,7 +57,7 @@ feeds:
 
 ```
 { type: 'metafeed', operation: 'add', feedtype: 'classic', purpose: 'Main', id: '@main' }
-{ type: 'metafeed', operation: 'add', feedtype: 'bamboo', purpose: 'Derived', id: '@derived' }
+{ type: 'metafeed', operation: 'add', feedtype: 'bamboo', purpose: 'Claims', id: '@claim' }
 { type: 'metafeed', operation: 'add', feedtype: 'classic', purpose: 'Linked', id: '@linked' }
 ```
 
@@ -66,8 +67,9 @@ key management section) are left out.
 
 ## Claims example
 
-An example of the Derived meta feed with two claims about different
-subsets of the main feed and a derived feed from another feed.
+An example of the Claims meta feed with two claims about different
+subsets of the main feed and a claim feed a subset of messages in
+another feed.
 
 ![Diagram2](./metafeed-example2.svg)
 <details>
@@ -99,8 +101,7 @@ claims.
 Once you start talking about multiple feeds that might relate to the
 same thing (say contact messages of a feed) it is natural that these
 feeds only contain the hash of the messages and not the messages
-themselves. This cuts down the storage overhead and makes them easier
-to check.
+themselves. This cuts down the overhead.
 
 ## Key management, identity and metadata
 
@@ -120,6 +121,7 @@ const seed = crypto.randomBytes(32)
 From this seed, a meta feed can be generated using:
 
 ```
+const prk = hkdf.extract(lhash, hash_len, seed, salt)
 const mf_info = "ssb-meta-feed-seed-v1:metafeed"
 const mf_seed = hkdf.expand(hash, hash_len, prk, length, mf_info)
 const mf_key = ssbKeys.generate("ed25519", mf_seed)
@@ -127,7 +129,7 @@ const mf_key = ssbKeys.generate("ed25519", mf_seed)
 
 We then encrypt the seed as a private message to the main feed. By
 doing this we allow the main feed to reconstruct the meta feed and all
-from sub feeds from this seed.
+sub feeds from this seed.
 
 Then the meta feed is linked with the main feed using a new message on
 the meta feed signed by both the main feed and the meta feed:
@@ -135,7 +137,7 @@ the meta feed signed by both the main feed and the meta feed:
 ```
 MF: [{ 
   content: {
-      type: 'metafeed',
+      type: 'metafeed/operation',
       operation: 'add',
       feedtype: 'clasic',
       purpose: 'main',
@@ -148,12 +150,22 @@ MF: [{
 }]
 ```
 
-Here sign_sf is a signature by of main feed of the fields above it in
+Here sign_sf is a signature by the main feed of the fields above it in
 the message (FIXME: precise definition). And sig_mf is the normal
 signature of the message on the meta feed.
 
-FIXME: the main feed should post a public message stating it's meta
-feed so other can find it
+In order for existing applications to know that a feed supports meta
+feeds, a special message is created on the main feed:
+
+```
+{ 
+  content: {
+      type: 'metafeed/announce',
+      previous_mf_msg: null,
+      id: '@mf',
+  }
+}
+```
 
 ### New SSB feed
 
@@ -162,31 +174,30 @@ feed and the main feed are generated. The main feed should use the
 info: "ssb-meta-feed-seed-v1:subfeed-1".
 
 The seed will also be encrypted to the main feed and the meta feed
-linked to the main feed.
+linked to the main feed just like for existing feeds.
 
 ### Identity
 
 By building a layer on top of existing feeds we maintain backwards
 compatible with existing clients. The identity will still be that of
-the main feed, this means that the following graph and secret
-handshake will continue working as before, but what we have added is a
+the main feed, this means that the follow graph and secret handshake
+will continue to work as before, so in essence what we have added is a
 mechanism for creating other feeds and have them linked to the main
 feed.
 
 It is worth noting that even though the examples above specify ways to
 generate new feeds from a single seed, it is perfectly fine and in
-some cases a good idea to generate an feed not from this seed. So that
-in the case of the main key being broken or stolen, you don't loose
+some cases a better idea to generate a feed not from this seed. Thus
+in the case the main key being broken or stolen, you don't loose
 everything.
-
-It is worth noting that the method can be used to generate subkeys
-from derived keys. Using [BIP32-Ed25519] instead was considered but
-that method has a weaker security model in the case of a key
-compromised where keys are shared between devices.
 
 If a key is reused in another part of the tree it should include a
 reference to the original subfeed or metafeed it was defined in. The
 original place is the authorative place for its metadata.
+
+Using [BIP32-Ed25519] instead was considered but that method has a
+weaker security model in the case of a key compromised where keys are
+shared between devices.
 
 ## Use cases
 
@@ -196,9 +207,9 @@ common examples:
 ### New feed format
 
 Changing to a new feed format could be implemented by adding a new
-feed to the meta feed state, and by adding a message to the old feed
-pointing to the new feed as the last message and assigning the new
-feed as active in the meta feed.
+feed to the meta feed state, and by adding a tombstone message to the
+old feed pointing and assigning the new feed as active in the meta
+feed.
 
 In case of backwards compability with clients that does not support a
 newer feed format or in the case of only wanting to support newer feed
@@ -210,7 +221,7 @@ the corresponding message in old feed in the newer feed.
 Lower end clients could offload this extra storage requirement to
 larger peers in the network.
 
-### Claims
+### Claims or indexes
 
 If one would like to replicate a specific part of a feed, such as the
 contact messages, one could request another peer to generate a feed
@@ -219,7 +230,7 @@ original messages could be included as auxiliary data. This would only
 act as a claim, never as a proof that some messages were not left
 out. Naturally this comes down to trust then. Using the friend graph
 would be natural, as would having multiple author staking claims and
-entangling them.
+maybe entangling them.
 
 ### Sub feeds
 
@@ -233,7 +244,9 @@ the last year.
 ### Ephemeral feeds
 
 Using the metadata it would be possible to attach a lifetime to feeds,
-meaning honest peers would delete the feeds after a specific time.
+meaning honest peers would delete the feeds after a specific
+time. This would enable applications to generate a short lived feed
+only for the communication between two parties.
 
 ### Allow list
 
