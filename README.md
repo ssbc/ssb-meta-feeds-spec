@@ -32,7 +32,7 @@ group.
 
 ## Example of a meta feed
 
-An example of a meta feed linking 3 feeds: a main feed, a claims meta
+An example of a meta feed linking 3 feeds: a main feed, an index meta
 feed and a linked meta feed that contains other feeds this identity is
 linked to.
 
@@ -45,7 +45,7 @@ digraph metafeed {
   
   edge [tailclip=false];
   a [label="{ <ref> | <data> main }"]
-  b [label="{ <ref> | <data> claims }"];
+  b [label="{ <ref> | <data> indexes }"];
   c [label="{ <ref> | <data> linked }"];
   c:ref:b -> b:data [arrowhead=vee, arrowtail=dot, dir=both];
   b:ref:a -> a:data [arrowhead=vee, arrowtail=dot, dir=both];
@@ -57,7 +57,7 @@ feeds:
 
 ```
 { type: 'metafeed/operation', operation: 'add', feedtype: 'classic', purpose: 'main', id: '@main' }
-{ type: 'metafeed/operation', operation: 'add', feedtype: 'bamboo', purpose: 'claims', id: '@claim' }
+{ type: 'metafeed/operation', operation: 'add', feedtype: 'bamboo', purpose: 'indexes', id: '@indexes' }
 { type: 'metafeed/operation', operation: 'add', feedtype: 'classic', purpose: 'linked', id: '@linked' }
 ```
 
@@ -65,9 +65,9 @@ Operation can be: `add`, `update`, `remove`. Update can be used to
 overwrite or extend the metadata of a feed. Note the signatures (see
 key management section) are left out.
 
-## Claims example
+## Indexes example
 
-An example of the claims meta feed with two claims about different
+An example of the indexes meta feed with two indexes about different
 subsets of the main feed and a claim feed a subset of messages in
 another feed.
 
@@ -80,9 +80,9 @@ digraph Derived {
   node [shape=record];
 
   edge [tailclip=false];
-  a [label="{ <ref> | <data> Claim1 }"]
-  b [label="{ <ref> | <data> Claim2 }"];
-  c [label="{ <ref> | <data> Claim3 }"];
+  a [label="{ <ref> | <data> Index1 }"]
+  b [label="{ <ref> | <data> Index2 }"];
+  c [label="{ <ref> | <data> Claim1 }"];
   c:ref:b -> b:data [arrowhead=vee, arrowtail=dot, dir=both];
   b:ref:a -> a:data [arrowhead=vee, arrowtail=dot, dir=both];
 }
@@ -90,13 +90,14 @@ digraph Derived {
 
 Contents of messages:
 ```
-{ type: 'metafeed/operation', operation: 'add', feedtype: 'classic', id: '@claim1', query: 'and(type(contact),author(@main))' }
-{ type: 'metafeed/operation', operation: 'add', feedtype: 'classic', id: '@claim2', query: 'and(type(about),author(@main))' }
-{ type: 'metafeed/operation', operation: 'add', feedtype: 'classic', id: '@claim3', query: 'and(type(about),author(@mobile))' }
+{ type: 'metafeed/operation', operation: 'add', feedtype: 'classic', id: '@index1', query: 'and(type(contact),author(@main))' }
+{ type: 'metafeed/operation', operation: 'add', feedtype: 'classic', id: '@index2', query: 'and(type(about),author(@main))' }
+{ type: 'metafeed/operation', operation: 'add', feedtype: 'classic', id: '@claim1', query: 'and(type(about),author(@mobile))' }
 ```
 
-As a malicious user could leave out messages, these can only be
-claims.
+We denote feeds describing messages within the same meta feed
+*indexes*, while feeds describing other feeds *claims* as a malicious
+user could leave out messages.
 
 Once you start talking about multiple feeds that might relate to the
 same thing (say contact messages of a feed) it is natural that these
@@ -229,8 +230,8 @@ that only references these messages. Then when exchanging data, the
 original messages could be included as auxiliary data. This would only
 act as a claim, never as a proof that some messages were not left
 out. Naturally this comes down to trust then. Using the friend graph
-would be natural, as would having multiple author staking claims and
-maybe entangling them.
+would be natural, as would using trustnet together with audits of
+these claims.
 
 ### Sub feeds
 
