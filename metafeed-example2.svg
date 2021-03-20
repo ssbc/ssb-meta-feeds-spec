@@ -1,44 +1,29 @@
-<svg width="310pt" height="45pt" viewBox="0.00 0.00 310.17 45.00" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+<svg width="177pt" height="45pt" viewBox="0.00 0.00 177.21 45.00" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
 <g id="graph0" class="graph" transform="scale(1 1) rotate(0) translate(4 41)">
-<title>Derived</title>
-<polygon fill="#ffffff" stroke="transparent" points="-4,4 -4,-41 306.169,-41 306.169,4 -4,4"></polygon>
+<title>Applications</title>
+<polygon fill="#ffffff" stroke="transparent" points="-4,4 -4,-41 173.2132,-41 173.2132,4 -4,4"></polygon>
 <!-- a -->
 <g id="node1" class="node">
 <title>a</title>
-<polygon fill="none" stroke="#000000" points="0,-.5 0,-36.5 76.723,-36.5 76.723,-.5 0,-.5"></polygon>
+<polygon fill="none" stroke="#000000" points="0,-.5 0,-36.5 66.6066,-36.5 66.6066,-.5 0,-.5"></polygon>
 <text text-anchor="middle" x="9.75" y="-14.4" font-family="Times,serif" font-size="14.00" fill="#000000"> </text>
 <polyline fill="none" stroke="#000000" points="19.5,-.7 19.5,-36.5 "></polyline>
-<text text-anchor="middle" x="48.1115" y="-14.4" font-family="Times,serif" font-size="14.00" fill="#000000">Claim1</text>
+<text text-anchor="middle" x="43.0533" y="-14.4" font-family="Times,serif" font-size="14.00" fill="#000000">App1</text>
 </g>
 <!-- b -->
 <g id="node2" class="node">
 <title>b</title>
-<polygon fill="none" stroke="#000000" points="112.723,-.5 112.723,-36.5 189.446,-36.5 189.446,-.5 112.723,-.5"></polygon>
-<text text-anchor="middle" x="122.473" y="-14.4" font-family="Times,serif" font-size="14.00" fill="#000000"> </text>
-<polyline fill="none" stroke="#000000" points="132.223,-.7 132.223,-36.5 "></polyline>
-<text text-anchor="middle" x="160.8345" y="-14.4" font-family="Times,serif" font-size="14.00" fill="#000000">Claim2</text>
+<polygon fill="none" stroke="#000000" points="102.6066,-.5 102.6066,-36.5 169.2132,-36.5 169.2132,-.5 102.6066,-.5"></polygon>
+<text text-anchor="middle" x="112.3566" y="-14.4" font-family="Times,serif" font-size="14.00" fill="#000000"> </text>
+<polyline fill="none" stroke="#000000" points="122.1066,-.7 122.1066,-36.5 "></polyline>
+<text text-anchor="middle" x="145.6599" y="-14.4" font-family="Times,serif" font-size="14.00" fill="#000000">App2</text>
 </g>
 <!-- b&#45;&gt;a -->
-<g id="edge2" class="edge">
-<title>b:a-&gt;a:data</title>
-<path fill="none" stroke="#000000" d="M113.9903,-18.5C107.1365,-18.5 96.8093,-18.5 86.515,-18.5"></path>
-<ellipse fill="#000000" stroke="#000000" cx="118.0845" cy="-18.5" rx="4" ry="4"></ellipse>
-<polygon fill="#000000" stroke="#000000" points="76.3615,-18.5 86.3615,-14.0001 81.3615,-18.5 86.3615,-18.5001 86.3615,-18.5001 86.3615,-18.5001 81.3615,-18.5 86.3615,-23.0001 76.3615,-18.5 76.3615,-18.5"></polygon>
-</g>
-<!-- c -->
-<g id="node3" class="node">
-<title>c</title>
-<polygon fill="none" stroke="#000000" points="225.446,-.5 225.446,-36.5 302.169,-36.5 302.169,-.5 225.446,-.5"></polygon>
-<text text-anchor="middle" x="235.196" y="-14.4" font-family="Times,serif" font-size="14.00" fill="#000000"> </text>
-<polyline fill="none" stroke="#000000" points="244.946,-.7 244.946,-36.5 "></polyline>
-<text text-anchor="middle" x="273.5575" y="-14.4" font-family="Times,serif" font-size="14.00" fill="#000000">Claim3</text>
-</g>
-<!-- c&#45;&gt;b -->
 <g id="edge1" class="edge">
-<title>c:b-&gt;b:data</title>
-<path fill="none" stroke="#000000" d="M226.7133,-18.5C219.8595,-18.5 209.5323,-18.5 199.238,-18.5"></path>
-<ellipse fill="#000000" stroke="#000000" cx="230.8075" cy="-18.5" rx="4" ry="4"></ellipse>
-<polygon fill="#000000" stroke="#000000" points="189.0845,-18.5 199.0845,-14.0001 194.0845,-18.5 199.0845,-18.5001 199.0845,-18.5001 199.0845,-18.5001 194.0845,-18.5 199.0845,-23.0001 189.0845,-18.5 189.0845,-18.5"></polygon>
+<title>b:a-&gt;a:data</title>
+<path fill="none" stroke="#000000" d="M103.8364,-18.5C96.9999,-18.5 86.6991,-18.5 76.431,-18.5"></path>
+<ellipse fill="#000000" stroke="#000000" cx="107.9099" cy="-18.5" rx="4" ry="4"></ellipse>
+<polygon fill="#000000" stroke="#000000" points="66.3033,-18.5 76.3033,-14.0001 71.3033,-18.5 76.3033,-18.5001 76.3033,-18.5001 76.3033,-18.5001 71.3033,-18.5 76.3033,-23.0001 66.3033,-18.5 66.3033,-18.5"></polygon>
 </g>
 </g>
 </svg>

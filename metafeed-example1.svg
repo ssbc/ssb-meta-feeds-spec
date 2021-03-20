@@ -1,44 +1,44 @@
-<svg width="301pt" height="45pt" viewBox="0.00 0.00 300.79 45.00" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+<svg width="317pt" height="45pt" viewBox="0.00 0.00 317.14 45.00" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
 <g id="graph0" class="graph" transform="scale(1 1) rotate(0) translate(4 41)">
 <title>metafeed</title>
-<polygon fill="#ffffff" stroke="transparent" points="-4,4 -4,-41 296.7946,-41 296.7946,4 -4,4"></polygon>
+<polygon fill="#ffffff" stroke="transparent" points="-4,4 -4,-41 313.1424,-41 313.1424,4 -4,4"></polygon>
 <!-- a -->
 <g id="node1" class="node">
 <title>a</title>
-<polygon fill="none" stroke="#000000" points="0,-.5 0,-36.5 65.0498,-36.5 65.0498,-.5 0,-.5"></polygon>
+<polygon fill="none" stroke="#000000" points="0,-.5 0,-36.5 63.4958,-36.5 63.4958,-.5 0,-.5"></polygon>
 <text text-anchor="middle" x="9.75" y="-14.4" font-family="Times,serif" font-size="14.00" fill="#000000"> </text>
 <polyline fill="none" stroke="#000000" points="19.5,-.7 19.5,-36.5 "></polyline>
-<text text-anchor="middle" x="42.2749" y="-14.4" font-family="Times,serif" font-size="14.00" fill="#000000">Main</text>
+<text text-anchor="middle" x="41.4979" y="-14.4" font-family="Times,serif" font-size="14.00" fill="#000000">main</text>
 </g>
 <!-- b -->
 <g id="node2" class="node">
 <title>b</title>
-<polygon fill="none" stroke="#000000" points="101.0498,-.5 101.0498,-36.5 181.6368,-36.5 181.6368,-.5 101.0498,-.5"></polygon>
-<text text-anchor="middle" x="110.7998" y="-14.4" font-family="Times,serif" font-size="14.00" fill="#000000"> </text>
-<polyline fill="none" stroke="#000000" points="120.5498,-.7 120.5498,-36.5 "></polyline>
-<text text-anchor="middle" x="151.0933" y="-14.4" font-family="Times,serif" font-size="14.00" fill="#000000">Derived</text>
+<polygon fill="none" stroke="#000000" points="99.4958,-.5 99.4958,-36.5 202.6466,-36.5 202.6466,-.5 99.4958,-.5"></polygon>
+<text text-anchor="middle" x="109.2458" y="-14.4" font-family="Times,serif" font-size="14.00" fill="#000000"> </text>
+<polyline fill="none" stroke="#000000" points="118.9958,-.7 118.9958,-36.5 "></polyline>
+<text text-anchor="middle" x="160.8212" y="-14.4" font-family="Times,serif" font-size="14.00" fill="#000000">applications</text>
 </g>
 <!-- b&#45;&gt;a -->
 <g id="edge2" class="edge">
 <title>b:a-&gt;a:data</title>
-<path fill="none" stroke="#000000" d="M102.3252,-18.5C95.5357,-18.5 85.3055,-18.5 75.1079,-18.5"></path>
-<ellipse fill="#000000" stroke="#000000" cx="106.3433" cy="-18.5" rx="4" ry="4"></ellipse>
-<polygon fill="#000000" stroke="#000000" points="65.0498,-18.5 75.0498,-14.0001 70.0498,-18.5 75.0498,-18.5001 75.0498,-18.5001 75.0498,-18.5001 70.0498,-18.5 75.0498,-23.0001 65.0498,-18.5 65.0498,-18.5"></polygon>
+<path fill="none" stroke="#000000" d="M101.0032,-18.5C94.1714,-18.5 83.8776,-18.5 73.6165,-18.5"></path>
+<ellipse fill="#000000" stroke="#000000" cx="105.0712" cy="-18.5" rx="4" ry="4"></ellipse>
+<polygon fill="#000000" stroke="#000000" points="63.4958,-18.5 73.4958,-14.0001 68.4958,-18.5 73.4958,-18.5001 73.4958,-18.5001 73.4958,-18.5001 68.4958,-18.5 73.4958,-23.0001 63.4958,-18.5 63.4958,-18.5"></polygon>
 </g>
 <!-- c -->
 <g id="node3" class="node">
 <title>c</title>
-<polygon fill="none" stroke="#000000" points="217.6368,-.5 217.6368,-36.5 292.7946,-36.5 292.7946,-.5 217.6368,-.5"></polygon>
-<text text-anchor="middle" x="227.3868" y="-14.4" font-family="Times,serif" font-size="14.00" fill="#000000"> </text>
-<polyline fill="none" stroke="#000000" points="237.1368,-.7 237.1368,-36.5 "></polyline>
-<text text-anchor="middle" x="264.9657" y="-14.4" font-family="Times,serif" font-size="14.00" fill="#000000">Linked</text>
+<polygon fill="none" stroke="#000000" points="238.6466,-.5 238.6466,-36.5 309.1424,-36.5 309.1424,-.5 238.6466,-.5"></polygon>
+<text text-anchor="middle" x="248.3966" y="-14.4" font-family="Times,serif" font-size="14.00" fill="#000000"> </text>
+<polyline fill="none" stroke="#000000" points="258.1466,-.7 258.1466,-36.5 "></polyline>
+<text text-anchor="middle" x="283.6445" y="-14.4" font-family="Times,serif" font-size="14.00" fill="#000000">linked</text>
 </g>
 <!-- c&#45;&gt;b -->
 <g id="edge1" class="edge">
 <title>c:b-&gt;b:data</title>
-<path fill="none" stroke="#000000" d="M219.0951,-18.5C212.2188,-18.5 201.8579,-18.5 191.53,-18.5"></path>
-<ellipse fill="#000000" stroke="#000000" cx="223.2157" cy="-18.5" rx="4" ry="4"></ellipse>
-<polygon fill="#000000" stroke="#000000" points="181.3433,-18.5 191.3433,-14.0001 186.3433,-18.5 191.3433,-18.5001 191.3433,-18.5001 191.3433,-18.5001 186.3433,-18.5 191.3433,-23.0001 181.3433,-18.5 181.3433,-18.5"></polygon>
+<path fill="none" stroke="#000000" d="M240.7074,-18.5C233.7749,-18.5 223.3292,-18.5 212.9167,-18.5"></path>
+<ellipse fill="#000000" stroke="#000000" cx="244.8945" cy="-18.5" rx="4" ry="4"></ellipse>
+<polygon fill="#000000" stroke="#000000" points="202.6466,-18.5 212.6466,-14.0001 207.6466,-18.5 212.6466,-18.5001 212.6466,-18.5001 212.6466,-18.5001 207.6466,-18.5 212.6466,-23.0001 202.6466,-18.5 202.6466,-18.5"></polygon>
 </g>
 </g>
 </svg>

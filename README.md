@@ -32,9 +32,9 @@ group.
 
 ## Example of a meta feed
 
-An example of a meta feed linking 3 feeds: a main feed, an index meta
-feed and a linked meta feed that contains other feeds this identity is
-linked to.
+An example of a meta feed with 3 feeds: a main social feed, an
+ applications meta feed and a same-as feed for describing links
+ between feeds to create a single virtual identity.
 
 ![Diagram](./metafeed-example1.svg)
 <details>
@@ -45,7 +45,7 @@ digraph metafeed {
   
   edge [tailclip=false];
   a [label="{ <ref> | <data> main }"]
-  b [label="{ <ref> | <data> indexes }"];
+  b [label="{ <ref> | <data> applications }"];
   c [label="{ <ref> | <data> linked }"];
   c:ref:b -> b:data [arrowhead=vee, arrowtail=dot, dir=both];
   b:ref:a -> a:data [arrowhead=vee, arrowtail=dot, dir=both];
@@ -57,7 +57,7 @@ feeds:
 
 ```
 { type: 'metafeed/operation', operation: 'add', feedtype: 'classic', purpose: 'main', id: '@main' }
-{ type: 'metafeed/operation', operation: 'add', feedtype: 'bamboo', purpose: 'indexes', id: '@indexes' }
+{ type: 'metafeed/operation', operation: 'add', feedtype: 'bamboo', purpose: 'applications', id: '@applications' }
 { type: 'metafeed/operation', operation: 'add', feedtype: 'classic', purpose: 'linked', id: '@linked' }
 ```
 
@@ -65,50 +65,39 @@ Operation can be: `add`, `update`, `remove`. Update can be used to
 overwrite or extend the metadata of a feed. Note the signatures (see
 key management section) are left out.
 
-## Indexes example
+## Applications example
 
-An example of the indexes meta feed with two indexes about different
-subsets of the main feed and a claim feed a subset of messages in
-another feed.
+An example of the applications meta feed with two different
+applications.
 
 ![Diagram2](./metafeed-example2.svg)
 <details>
-digraph Derived {
+digraph Applications {
 
   rankdir=RL
   nodesep=0.6
   node [shape=record];
 
   edge [tailclip=false];
-  a [label="{ <ref> | <data> Index1 }"]
-  b [label="{ <ref> | <data> Index2 }"];
-  c [label="{ <ref> | <data> Claim1 }"];
-  c:ref:b -> b:data [arrowhead=vee, arrowtail=dot, dir=both];
+  a [label="{ <ref> | <data> App1 }"]
+  b [label="{ <ref> | <data> App2 }"];
+  
   b:ref:a -> a:data [arrowhead=vee, arrowtail=dot, dir=both];
 }
 </details>
 
-Contents of messages:
-```
-{ type: 'metafeed/operation', operation: 'add', feedtype: 'classic', id: '@index1', query: 'and(type(contact),author(@main))' }
-{ type: 'metafeed/operation', operation: 'add', feedtype: 'classic', id: '@index2', query: 'and(type(about),author(@main))' }
-{ type: 'metafeed/operation', operation: 'add', feedtype: 'classic', id: '@claim1', query: 'and(type(about),author(@mobile))' }
-```
+Contents of messages describing two feeds where the messages for each
+application would reside:
 
-We denote feeds describing messages within the same meta feed
-*indexes*, while feeds describing other feeds *claims* as a malicious
-user could leave out messages.
-
-Once you start talking about multiple feeds that might relate to the
-same thing (say contact messages of a feed) it is natural that these
-feeds only contain the hash of the messages and not the messages
-themselves. This cuts down the overhead.
+```
+{ type: 'metafeed/operation', operation: 'add', feedtype: 'classic', id: '@app1' }
+{ type: 'metafeed/operation', operation: 'add', feedtype: 'classic', id: '@app2' }
+```
 
 ## Key management, identity and metadata
 
 As mentioned earlier, in classical SSB the feed identity is the same
-as the feed. Here instead we want to decouple the identity and
-feeds. 
+as the feed. Here instead we want to decouple the identity and feeds.
 
 ### Existing SSB feed
 
@@ -224,14 +213,14 @@ larger peers in the network.
 
 ### Claims or indexes
 
-If one would like to replicate a specific part of a feed, such as the
-contact messages, one could request another peer to generate a feed
-that only references these messages. Then when exchanging data, the
-original messages could be included as auxiliary data. This would only
-act as a claim, never as a proof that some messages were not left
-out. Naturally this comes down to trust then. Using the friend graph
-would be natural, as would using trustnet together with audits of
-these claims.
+For classical SSB feeds if one would like to replicate a specific part
+of a feed, such as the contact messages, one could request another
+peer to generate a feed that only references these messages. Then when
+exchanging data, the original messages could be included as auxiliary
+data. This would only act as a claim, never as a proof that some
+messages were not left out. Naturally this comes down to trust
+then. Using the friend graph would be natural, as would using trustnet
+together with audits of these claims.
 
 ### Sub feeds
 
