@@ -90,8 +90,8 @@ Contents of messages describing two feeds where the messages for each
 application would reside:
 
 ```
-{ type: 'metafeed/operation', operation: 'add', feedtype: 'classic', id: '@app1' }
-{ type: 'metafeed/operation', operation: 'add', feedtype: 'classic', id: '@app2' }
+{ type: 'metafeed/operation', operation: 'add', feedtype: 'classic', id: '@app1', purpose: 'gathering' }
+{ type: 'metafeed/operation', operation: 'add', feedtype: 'classic', id: '@app2', purpose: 'chess' }
 ```
 
 ## Key management, identity and metadata
