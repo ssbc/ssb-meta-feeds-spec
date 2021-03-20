@@ -157,6 +157,9 @@ feeds, a special message is created on the main feed:
 }
 ```
 
+For how meta feeds can be used together with existing feeds to enable
+partial replication see [ssb-secure-partial-replication].
+
 ### New SSB feed
 
 A new feed starts by constructing a seed. From this seed both the meta
@@ -278,3 +281,4 @@ CFT suggested the use of meta feeds
 [in](https://github.com/arj03/ssb-observables/issues/1)
 
 [BIP32-Ed25519]: https://github.com/wallet-io/bip32-ed25519/blob/master/doc/Ed25519_BIP.pdf
+[ssb-secure-partial-replication]: https://github.com/ssb-ngi-pointer/ssb-secure-partial-replication
