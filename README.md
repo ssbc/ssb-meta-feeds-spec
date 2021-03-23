@@ -55,7 +55,6 @@ feeds:
 ```
 { type: 'metafeed/operation', operation: 'add', feedtype: 'classic', purpose: 'main', id: '@main' }
 { type: 'metafeed/operation', operation: 'add', feedtype: 'bamboo', purpose: 'applications', id: '@applications' }
-{ type: 'metafeed/operation', operation: 'add', feedtype: 'classic', purpose: 'linked', id: '@linked' }
 ```
 
 Operation can be: `add`, `update`, `remove`. Update can be used to
