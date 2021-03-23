@@ -32,9 +32,8 @@ group.
 
 ## Example of a meta feed
 
-An example of a meta feed with 3 feeds: a main social feed, an
- applications meta feed and a same-as feed for describing links
- between feeds to create a single virtual identity.
+An example of a meta feed with 2 feeds: a main social feed and an 
+applications meta feed.
 
 ![Diagram](./metafeed-example1.svg)
 <details>
@@ -46,8 +45,6 @@ digraph metafeed {
   edge [tailclip=false];
   a [label="{ <ref> | <data> main }"]
   b [label="{ <ref> | <data> applications }"];
-  c [label="{ <ref> | <data> linked }"];
-  c:ref:b -> b:data [arrowhead=vee, arrowtail=dot, dir=both];
   b:ref:a -> a:data [arrowhead=vee, arrowtail=dot, dir=both];
 }
 </details>
