@@ -1,7 +1,7 @@
-<svg width="317pt" height="45pt" viewBox="0.00 0.00 317.14 45.00" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+<svg width="211pt" height="45pt" viewBox="0.00 0.00 210.65 45.00" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
 <g id="graph0" class="graph" transform="scale(1 1) rotate(0) translate(4 41)">
 <title>metafeed</title>
-<polygon fill="#ffffff" stroke="transparent" points="-4,4 -4,-41 313.1424,-41 313.1424,4 -4,4"></polygon>
+<polygon fill="#ffffff" stroke="transparent" points="-4,4 -4,-41 206.6466,-41 206.6466,4 -4,4"></polygon>
 <!-- a -->
 <g id="node1" class="node">
 <title>a</title>
@@ -19,26 +19,11 @@
 <text text-anchor="middle" x="160.8212" y="-14.4" font-family="Times,serif" font-size="14.00" fill="#000000">applications</text>
 </g>
 <!-- b&#45;&gt;a -->
-<g id="edge2" class="edge">
+<g id="edge1" class="edge">
 <title>b:a-&gt;a:data</title>
 <path fill="none" stroke="#000000" d="M101.0032,-18.5C94.1714,-18.5 83.8776,-18.5 73.6165,-18.5"></path>
 <ellipse fill="#000000" stroke="#000000" cx="105.0712" cy="-18.5" rx="4" ry="4"></ellipse>
 <polygon fill="#000000" stroke="#000000" points="63.4958,-18.5 73.4958,-14.0001 68.4958,-18.5 73.4958,-18.5001 73.4958,-18.5001 73.4958,-18.5001 68.4958,-18.5 73.4958,-23.0001 63.4958,-18.5 63.4958,-18.5"></polygon>
-</g>
-<!-- c -->
-<g id="node3" class="node">
-<title>c</title>
-<polygon fill="none" stroke="#000000" points="238.6466,-.5 238.6466,-36.5 309.1424,-36.5 309.1424,-.5 238.6466,-.5"></polygon>
-<text text-anchor="middle" x="248.3966" y="-14.4" font-family="Times,serif" font-size="14.00" fill="#000000"> </text>
-<polyline fill="none" stroke="#000000" points="258.1466,-.7 258.1466,-36.5 "></polyline>
-<text text-anchor="middle" x="283.6445" y="-14.4" font-family="Times,serif" font-size="14.00" fill="#000000">linked</text>
-</g>
-<!-- c&#45;&gt;b -->
-<g id="edge1" class="edge">
-<title>c:b-&gt;b:data</title>
-<path fill="none" stroke="#000000" d="M240.7074,-18.5C233.7749,-18.5 223.3292,-18.5 212.9167,-18.5"></path>
-<ellipse fill="#000000" stroke="#000000" cx="244.8945" cy="-18.5" rx="4" ry="4"></ellipse>
-<polygon fill="#000000" stroke="#000000" points="202.6466,-18.5 212.6466,-14.0001 207.6466,-18.5 212.6466,-18.5001 212.6466,-18.5001 212.6466,-18.5001 207.6466,-18.5 212.6466,-23.0001 202.6466,-18.5 202.6466,-18.5"></polygon>
 </g>
 </g>
 </svg>
