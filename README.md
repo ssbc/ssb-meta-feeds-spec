@@ -168,11 +168,10 @@ linked to the main feed just like for existing feeds.
 ### Identity
 
 By building a layer on top of existing feeds we maintain backwards
-compatible with existing clients. The identity will still be that of
-the main feed, this means that the follow graph and secret handshake
-will continue to work as before, so in essence what we have added is a
-mechanism for creating other feeds and have them linked to the main
-feed.
+compatible with existing clients. The identity to be used by new 
+applications should be that of the meta feed. For backwards 
+compatibility contact messages forming the follow graph together with
+secret handshake will continue to use the key of the main feed.
 
 It is worth noting that even though the examples above specify ways to
 generate new feeds from a single seed, it is perfectly fine and in
