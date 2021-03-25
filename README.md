@@ -53,8 +53,8 @@ Contents of the messages in the meta feed that acts as meta data for
 feeds:
 
 ```
-{ type: 'metafeed/operation', operation: 'add', feedtype: 'classic', purpose: 'main', id: '@main' }
-{ type: 'metafeed/operation', operation: 'add', feedtype: 'bamboo', purpose: 'applications', id: '@applications' }
+{ type: 'metafeed/operation', operation: 'add', feedformat: 'classic', purpose: 'main', id: '@main' }
+{ type: 'metafeed/operation', operation: 'add', feedformat: 'bamboo', purpose: 'applications', id: '@applications' }
 ```
 
 Operation can be: `add`, `update`, `remove`. Update can be used to
@@ -86,8 +86,8 @@ Contents of messages describing two feeds where the messages for each
 application would reside:
 
 ```
-{ type: 'metafeed/operation', operation: 'add', feedtype: 'classic', id: '@app1', purpose: 'gathering' }
-{ type: 'metafeed/operation', operation: 'add', feedtype: 'classic', id: '@app2', purpose: 'chess' }
+{ type: 'metafeed/operation', operation: 'add', feedformat: 'classic', id: '@app1', purpose: 'gathering' }
+{ type: 'metafeed/operation', operation: 'add', feedformat: 'classic', id: '@app2', purpose: 'chess' }
 ```
 
 ## Key management, identity and metadata
@@ -125,7 +125,7 @@ MF: [{
   content: {
       type: 'metafeed/operation',
       operation: 'add',
-      feedtype: 'clasic',
+      feedformat: 'clasic',
       purpose: 'main',
       id: '@main',
       author: '@mf', 
