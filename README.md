@@ -145,7 +145,8 @@ Then the meta feed is linked with the main feed using a new message on
 the meta feed signed by both the main feed and the meta feed:
 
 ```
-MF: [{ 
+MF: [{
+  ...,
   content: {
     type: 'metafeed/operation',
     operation: 'add',
@@ -154,15 +155,23 @@ MF: [{
     id: '@main',
     author: '@mf', 
     nonce: '<rand>', 
-    sign_sf: suf_sf.sig
+    sign_sf: 'main.sig'
   },
-  sig_mf:sig_mf.sig
+  signature: sig_mf.sig
 }]
 ```
 
-Here sign_sf is a signature by the main feed of the fields above it in
-the message (FIXME: precise definition). And sig_mf is the normal
-signature of the message on the meta feed.
+Here `main.sig` is a signature by the main feed of the fields above it
+base 64 encoded with a `.sig.ed25519` at the end:
+
+```
+signature = nacl_sign_detached(
+  msg: '"type": "metafeed/operation", "operation": "add", "feedformat": "clasic", "purpose": "main", "id": "@main", "author": "@mf", "nonce": "<rand>"',
+  key: main_feed_pk
+)
+```
+
+sig_mf.sign is the normal signature of the message on the meta feed.
 
 In order for existing applications to know that a feed supports meta
 feeds, a special message is created on the main feed:
