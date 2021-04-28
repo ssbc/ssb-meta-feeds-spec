@@ -54,18 +54,18 @@ feeds:
 
 ```
 { 
-    type: 'metafeed/operation', 
-    operation: 'add', 
-    feedformat: 'classic', 
-    purpose: 'main', 
-    id: '@main' 
+  type: 'metafeed/operation', 
+  operation: 'add', 
+  feedformat: 'classic', 
+  purpose: 'main', 
+  id: '@main' 
 },
 { 
-    type: 'metafeed/operation', 
-    operation: 'add', 
-    feedformat: 'bamboo', 
-    purpose: 'applications', 
-    id: '@applications' 
+  type: 'metafeed/operation', 
+  operation: 'add', 
+  feedformat: 'bamboo', 
+  purpose: 'applications', 
+  id: '@applications' 
 }
 ```
 
@@ -99,18 +99,18 @@ application would reside:
 
 ```
 { 
-    type: 'metafeed/operation', 
-    operation: 'add', 
-    feedformat: 'classic', 
-    id: '@app1', 
-    purpose: 'gathering' 
+  type: 'metafeed/operation', 
+  operation: 'add', 
+  feedformat: 'classic', 
+  id: '@app1', 
+  purpose: 'gathering' 
 },
 { 
-    type: 'metafeed/operation', 
-    operation: 'add', 
-    feedformat: 'classic', 
-    id: '@app2', 
-    purpose: 'chess' 
+  type: 'metafeed/operation', 
+  operation: 'add', 
+  feedformat: 'classic', 
+  id: '@app2', 
+  purpose: 'chess' 
 }
 ```
 
@@ -147,14 +147,14 @@ the meta feed signed by both the main feed and the meta feed:
 ```
 MF: [{ 
   content: {
-      type: 'metafeed/operation',
-      operation: 'add',
-      feedformat: 'clasic',
-      purpose: 'main',
-      id: '@main',
-      author: '@mf', 
-      nonce: '<rand>', 
-      sign_sf: suf_sf.sig
+    type: 'metafeed/operation',
+    operation: 'add',
+    feedformat: 'clasic',
+    purpose: 'main',
+    id: '@main',
+    author: '@mf', 
+    nonce: '<rand>', 
+    sign_sf: suf_sf.sig
   },
   sig_mf:sig_mf.sig
 }]
@@ -170,9 +170,9 @@ feeds, a special message is created on the main feed:
 ```
 { 
   content: {
-      type: 'metafeed/announce',
-      previous_mf_msg: null,
-      id: '@mf',
+    type: 'metafeed/announce',
+    previous_mf_msg: null,
+    id: '@mf',
   }
 }
 ```
