@@ -137,9 +137,18 @@ const mf_seed = hkdf.expand(hash, hash_len, prk, length, mf_info)
 const mf_key = ssbKeys.generate("ed25519", mf_seed)
 ```
 
-We then encrypt the seed as a private message to the main feed. By
-doing this we allow the main feed to reconstruct the meta feed and all
-sub feeds from this seed.
+We then encrypt the seed as a private message to the main feed. 
+
+```
+{
+  type: 'metafeed/seed',
+  id: '@metafeed',
+  seed: <base64_encoded_seed>
+}
+```
+
+By doing this we allow the main feed to reconstruct the meta feed and
+all sub feeds from this seed.
 
 Then the meta feed is linked with the main feed using a new message on
 the meta feed signed by both the main feed and the meta feed:
@@ -186,8 +195,13 @@ feeds, a special message is created on the main feed:
 }
 ```
 
-For how meta feeds can be used together with existing feeds to enable
-partial replication see [ssb-secure-partial-replication].
+A feed can only have one meta feed. If for whatever reason an existing
+meta feed needs to be superseed, a new message is created pointing to
+the previous `metafeed/announce` message. Be sure to send the new seed
+as a private messages as described above.
+
+How meta feeds can be used together with existing feeds to enable
+partial replication is described in [ssb-secure-partial-replication].
 
 ### New SSB feed
 
