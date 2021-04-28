@@ -1,6 +1,6 @@
 # SSB meta feed
 
-Status: Design phase
+Status: Ready for implementation
 
 Feeds in SSB are the main abstraction. It is possible to entangle
 multiple feeds by referencing messages in other feeds, but otherwise
