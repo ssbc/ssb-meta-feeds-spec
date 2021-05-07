@@ -57,15 +57,15 @@ feeds:
   type: 'metafeed/operation', 
   operation: 'add', 
   feedformat: 'classic', 
-  purpose: 'main', 
-  id: '@main' 
+  feedpurpose: 'main', 
+  subfeed: '@main' 
 },
 { 
   type: 'metafeed/operation', 
   operation: 'add', 
   feedformat: 'bamboo', 
-  purpose: 'applications', 
-  id: '@applications' 
+  feedpurpose: 'applications', 
+  subfeed: '@applications' 
 }
 ```
 
@@ -102,15 +102,15 @@ application would reside:
   type: 'metafeed/operation', 
   operation: 'add', 
   feedformat: 'classic', 
-  id: '@app1', 
-  purpose: 'gathering' 
+  feedpurpose: 'gathering' 
+  subfeed: '@app1', 
 },
 { 
   type: 'metafeed/operation', 
   operation: 'add', 
   feedformat: 'classic', 
-  id: '@app2', 
-  purpose: 'chess' 
+  feedpurpose: 'chess' 
+  subfeed: '@app2', 
 }
 ```
 
@@ -160,8 +160,8 @@ MF: [{
     type: 'metafeed/operation',
     operation: 'add',
     feedformat: 'clasic',
-    purpose: 'main',
-    id: '@main',
+    feedpurpose: 'main',
+    subfeed: '@main',
     metafeed: '@mf', 
     nonce: '<timestamp>', 
     sign_sf: 'main.sig'
@@ -175,7 +175,7 @@ base 64 encoded with a `.sig.ed25519` at the end:
 
 ```
 signature = nacl_sign_detached(
-  msg: '"type": "metafeed/operation", "operation": "add", "feedformat": "clasic", "purpose": "main", "id": "@main", "author": "@mf", "nonce": "<rand>"',
+  msg: '"type": "metafeed/operation", "operation": "add", "feedformat": "clasic", "feedpurpose": "main", "subfeed": "@main", "metafeed": "@mf", "nonce": "<timestamp>"',
   key: main_feed_pk
 )
 ```
