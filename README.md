@@ -154,7 +154,7 @@ Then the meta feed is linked with the main feed using a new message on
 the meta feed signed by both the main feed and the meta feed:
 
 ```
-MF: [{
+{
   ...,
   content: {
     type: 'metafeed/operation',
@@ -164,10 +164,10 @@ MF: [{
     subfeed: '@main',
     metafeed: '@mf', 
     nonce: '<timestamp>', 
-    sign_sf: 'main.sig'
+    subfeedSignature: 'main.sig'
   },
   signature: sig_mf.sig
-}]
+}
 ```
 
 Here `main.sig` is a signature by the main feed of the fields above it
