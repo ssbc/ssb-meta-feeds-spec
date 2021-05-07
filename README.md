@@ -54,24 +54,47 @@ feeds:
 
 ```
 { 
-  type: 'metafeed/operation', 
-  operation: 'add', 
+  type: 'metafeed/add', 
   feedformat: 'classic', 
   feedpurpose: 'main', 
-  subfeed: '@main' 
+  subfeed: '@main',
+  tangle: {
+    metafeed: { root: null, previous: null }
+  },
+  ...
 },
 { 
-  type: 'metafeed/operation', 
-  operation: 'add', 
+  type: 'metafeed/add', 
   feedformat: 'bamboo', 
   feedpurpose: 'applications', 
-  subfeed: '@applications' 
+  subfeed: '@applications',
+  ...
 }
 ```
 
-Operation can be: `add`, `update`, `remove`. Update can be used to
-overwrite or extend the metadata of a feed. Note the signatures (see
-key management section) are left out.
+Initially two operations are supported: `add` and `tombstone`. Note,
+signatures (see key management section) are left out in the examples
+here.
+
+Tombstoning means that the feed is no longer part of the meta
+feed. Whether or not the sub feed itself is tombstoned is a separate
+concern.
+
+Example tombstone message:
+
+```
+{ 
+  type: 'metafeed/tombstone',
+  subfeed: '@applications',
+  reason: '',
+  tangle: {
+    metafeed: { root: %addmsg, previous: %addmsg }
+  }
+}
+```
+
+Updating the metadata on a feed in a meta feed is currently not
+supported.
 
 ## Applications example
 
@@ -94,23 +117,20 @@ digraph Applications {
 }
 </details>
 
-Contents of messages describing two feeds where the messages for each
-application would reside:
-
 ```
 { 
-  type: 'metafeed/operation', 
-  operation: 'add', 
+  type: 'metafeed/add', 
   feedformat: 'classic', 
   feedpurpose: 'gathering' 
-  subfeed: '@app1', 
+  subfeed: '@app1',
+  ...
 },
 { 
-  type: 'metafeed/operation', 
-  operation: 'add', 
+  type: 'metafeed/add', 
   feedformat: 'classic', 
   feedpurpose: 'chess' 
-  subfeed: '@app2', 
+  subfeed: '@app2',
+  ...
 }
 ```
 
@@ -157,13 +177,15 @@ the meta feed signed by both the main feed and the meta feed:
 {
   ...,
   content: {
-    type: 'metafeed/operation',
-    operation: 'add',
+    type: 'metafeed/add',
     feedformat: 'clasic',
     feedpurpose: 'main',
     subfeed: '@main',
     metafeed: '@mf', 
-    nonce: '<timestamp>', 
+    nonce: '<timestamp>',
+    tangle: {
+      metafeed: { root: null, previous: null }
+    },
     subfeedSignature: 'main.sig'
   },
   signature: sig_mf.sig
@@ -175,12 +197,10 @@ base 64 encoded with a `.sig.ed25519` at the end:
 
 ```
 signature = nacl_sign_detached(
-  msg: '"type": "metafeed/operation", "operation": "add", "feedformat": "clasic", "feedpurpose": "main", "subfeed": "@main", "metafeed": "@mf", "nonce": "<timestamp>"',
+  msg: '"type": "metafeed/add", "feedformat": "clasic", "feedpurpose": "main", "subfeed": "@main", "metafeed": "@mf", "nonce": "<timestamp>", "tangle": { "metafeeed": { "root": null, "previous": null } }',
   key: main_feed_pk
 )
 ```
-
-sig_mf.sign is the normal signature of the message on the meta feed.
 
 In order for existing applications to know that a feed supports meta
 feeds, a special message is created on the main feed:
