@@ -162,8 +162,8 @@ MF: [{
     feedformat: 'clasic',
     purpose: 'main',
     id: '@main',
-    author: '@mf', 
-    nonce: '<rand>', 
+    metafeed: '@mf', 
+    nonce: '<timestamp>', 
     sign_sf: 'main.sig'
   },
   signature: sig_mf.sig
