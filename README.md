@@ -209,8 +209,10 @@ feeds, a special message is created on the main feed:
 { 
   content: {
     type: 'metafeed/announce',
-    previous_mf_msg: null,
     id: '@mf',
+    tangle: {
+      metafeed: { root: null, previous: null }
+    }
   }
 }
 ```
