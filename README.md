@@ -162,7 +162,7 @@ We then encrypt the seed as a private message to the main feed.
 ```
 {
   type: 'metafeed/seed',
-  id: '@metafeed',
+  metafeed: '@metafeed',
   seed: <base64_encoded_seed>
 }
 ```
@@ -209,7 +209,7 @@ feeds, a special message is created on the main feed:
 { 
   content: {
     type: 'metafeed/announce',
-    id: '@mf',
+    metafeed: '@mf',
     tangle: {
       metafeed: { root: null, previous: null }
     }
