@@ -208,8 +208,8 @@ the previous `metafeed/announce` message.
 
 A new identity starts by constructing a seed. From this seed both the
 meta feed keys and the main feed keys are generated. The main should
-use the info: "ssb-meta-feed-seed-v1:" + nonce of the message on the
-meta feed.
+use the info: "ssb-meta-feed-seed-v1:" + base64 encoded nonce of the
+message on the meta feed.
 
 The seed will also be encrypted to the main feed and the meta feed
 linked to the main feed just like for existing feeds.
