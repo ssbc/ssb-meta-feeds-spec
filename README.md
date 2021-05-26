@@ -2,33 +2,29 @@
 
 Status: Ready for implementation
 
-Feeds in SSB are the main abstraction. It is possible to entangle
-multiple feeds by referencing messages in other feeds, but otherwise
-feeds are independent. Furthermore there is no concept of any kind of
-metadata about a feed. This could be the lifetime of a feed, what the
-feed is about, the format of the messages or other things people might
-come up with.
+In classical SSB an identity is tied to a single feed. All messages
+for different kinds of applications are posted to this single
+feed. While it is possible to create multiple feeds, there has been no
+formal specification for how these feeds relate and what their
+purposes are.
 
-Over time a number of different use cases for reasoning about how
-multiple feeds relate to each other has come up. This includes same-as
-where multiple devices have independent feeds, but can be seen as
-belonging to the same physical person. Feed rotation for switching to
-a newer feed format. Or the ablity to say something about a subset of
-messages from a feed (a claim or index), that would enable partial
-replication of those messages.
+Meta feeds aims to solve these problems by tying an identity to a meta
+feed instead. A meta feed referencing other feeds or meta feeds and
+contains meta data about the feed including purpose and feed
+format. This allows for things like feed rotation to a new feed
+format, splitting data into separate feeds and to create special
+indexing feeds for partial replication.
 
-Another aspect of existing feeds in SSB is that they conflate the
-identity of the feed together with the contents of the feed.
+A meta feed is tied to a single identity and thus should only be used
+on a single device. There is a separate [fusion identity] protocol
+that only deals with how to relate multiple devices to a single
+identity. This spec is not for that.
 
-A meta feed is mainly meant to be used on a single device and is a
-special kind of feed that only contains references to and maintains
-metadata about other feeds. As such it also has its own keypair that
-defines its identity. Naturally a meta feed can also reference other
-meta feeds and thus can be used to build a tree. The current state of
-a meta feed, meaning what other feeds it references and their state,
-is the reduced state of all changes on the feed. Because a meta feed
-is just a series of messages they can be private or part of a private
-group.
+Meta feeds will use a specialized [feed
+format](https://github.com/ssb-ngi-pointer/bipfy-badger-spec) that
+aims be very easy to implement. The aim is that this will make it
+easier for implementations that does not need to support the classical
+SSB format.
 
 ## Example of a meta feed
 
@@ -58,7 +54,7 @@ feeds:
   feedformat: 'classic', 
   feedpurpose: 'main', 
   subfeed: '@main',
-  tangle: {
+  tangles: {
     metafeed: { root: null, previous: null }
   },
   ...
@@ -87,7 +83,7 @@ Example tombstone message:
   type: 'metafeed/tombstone',
   subfeed: '@applications',
   reason: '',
-  tangle: {
+  tangles: {
     metafeed: { root: %addmsg, previous: %addmsg }
   }
 }
@@ -139,7 +135,7 @@ digraph Applications {
 As mentioned earlier, in classical SSB the feed identity is the same
 as the feed. Here instead we want to decouple the identity and feeds.
 
-### Existing SSB feed
+### Existing SSB identity
 
 To generate a meta feed and link that to the main feed, first a seed
 is generated:
@@ -171,35 +167,22 @@ By doing this we allow the main feed to reconstruct the meta feed and
 all sub feeds from this seed.
 
 Then the meta feed is linked with the main feed using a new message on
-the meta feed signed by both the main feed and the meta feed:
+the meta feed signed by both the main feed and the meta feed. For
+details this see the [feed
+format](https://github.com/ssb-ngi-pointer/bipfy-badger-spec).
 
 ```
 {
-  ...,
-  content: {
-    type: 'metafeed/add',
-    feedformat: 'clasic',
-    feedpurpose: 'main',
-    subfeed: '@main',
-    metafeed: '@mf', 
-    nonce: '<timestamp>',
-    tangle: {
-      metafeed: { root: null, previous: null }
-    },
-    subfeedSignature: 'main.sig'
-  },
-  signature: sig_mf.sig
+  type: 'metafeed/add',
+  feedformat: 'clasic',
+  feedpurpose: 'main',
+  subfeed: '@main',
+  metafeed: '@mf', 
+  nonce: '<random_32_bit>',
+  tangles: {
+    metafeed: { root: null, previous: null }
+  }
 }
-```
-
-Here `main.sig` is a signature by the main feed of the fields above it
-base 64 encoded with a `.sig.ed25519` at the end:
-
-```
-signature = nacl_sign_detached(
-  msg: '"type": "metafeed/add", "feedformat": "clasic", "feedpurpose": "main", "subfeed": "@main", "metafeed": "@mf", "nonce": "<timestamp>", "tangle": { "metafeeed": { "root": null, "previous": null } }',
-  key: main_feed_pk
-)
 ```
 
 In order for existing applications to know that a feed supports meta
@@ -210,7 +193,7 @@ feeds, a special message is created on the main feed:
   content: {
     type: 'metafeed/announce',
     metafeed: '@mf',
-    tangle: {
+    tangles: {
       metafeed: { root: null, previous: null }
     }
   }
@@ -219,22 +202,19 @@ feeds, a special message is created on the main feed:
 
 A feed can only have one meta feed. If for whatever reason an existing
 meta feed needs to be superseed, a new message is created pointing to
-the previous `metafeed/announce` message. Be sure to send the new seed
-as a private messages as described above.
+the previous `metafeed/announce` message.
 
-How meta feeds can be used together with existing feeds to enable
-partial replication is described in [ssb-secure-partial-replication].
+### New SSB identity
 
-### New SSB feed
-
-A new feed starts by constructing a seed. From this seed both the meta
-feed and the main feed are generated. The main feed should use the
-info: "ssb-meta-feed-seed-v1:subfeed-1".
+A new identity starts by constructing a seed. From this seed both the
+meta feed keys and the main feed keys are generated. The main should
+use the info: "ssb-meta-feed-seed-v1:" + nonce of the message on the
+meta feed.
 
 The seed will also be encrypted to the main feed and the meta feed
 linked to the main feed just like for existing feeds.
 
-### Identity
+### Identity backwards compatibility
 
 By building a layer on top of existing feeds we maintain backwards
 compatible with existing clients. The identity to be used by new 
@@ -248,8 +228,8 @@ some cases a better idea to generate a feed not from this seed. Thus
 in the case the main key being broken or stolen, you don't loose
 everything.
 
-If a key is reused in another part of the tree it should include a
-reference to the original subfeed or metafeed it was defined in. The
+If a key is reused in another part of the tree it must include a
+reference to the original sub feed or meta feed it was defined in. The
 original place is the authorative place for its metadata.
 
 Using [BIP32-Ed25519] instead was considered but that method has a
@@ -314,23 +294,6 @@ honest peers would give piece of mind that the data is only stored on
 a certain subset of the whole network. This can naturally be combined
 with private groups to better ensure safety.
 
-### Same-as
-
-While there are different ways to solve the problem of multiple feeds
-belonging to the same physical person. We are going to sketch two
-possible solutions here in very broad terms.
-
-One solution would be to derive a key for each device from the main
-key and transfer those to the devices out of band. Or to simply
-collect the device ids. In any case, the main feed would maintain a
-subfeed with all the devices listed. The main feed would then be
-authorative of which devices constitute same-as.
-
-Another option would be to have each device maintain a list of other
-keys they consider same-as. If they are all in agreement the feeds
-would be considered the same. This solution leaves out a canonical
-name for the aggregated identity.
-
 ## Open questions
 
 - In the case of claims, how are bad actors handled?
@@ -346,3 +309,4 @@ CFT suggested the use of meta feeds
 
 [BIP32-Ed25519]: https://github.com/wallet-io/bip32-ed25519/blob/master/doc/Ed25519_BIP.pdf
 [ssb-secure-partial-replication]: https://github.com/ssb-ngi-pointer/ssb-secure-partial-replication
+[fusion identity]: https://github.com/ssb-ngi-pointer/fusion-identity-spec/
