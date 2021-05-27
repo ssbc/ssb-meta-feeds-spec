@@ -153,6 +153,10 @@ const mf_seed = hkdf.expand(hash, hash_len, prk, length, mf_info)
 const mf_key = ssbKeys.generate("ed25519", mf_seed)
 ```
 
+Note we use 'metafeed' here in the info. As the top meta feed is
+special we use that string, for all other derived feeds the nonce from
+the message where it is added to the meta feed is used.
+
 We then encrypt the seed as a private message to the main feed. 
 
 ```
