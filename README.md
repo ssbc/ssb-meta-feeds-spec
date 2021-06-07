@@ -8,28 +8,28 @@ feed. While it is possible to create multiple feeds, there has been no
 formal specification for how these feeds relate and what their
 purposes are.
 
-Meta feeds aims to solve these problems by tying an identity to a meta
-feed instead. A meta feed referencing other feeds or meta feeds and
-contains meta data about the feed including purpose and feed
+Meta feeds aim to solve these problems by tying an identity to a meta
+feed instead. A meta feed references other feeds (or even meta feeds) and
+contains metadata about the feed including purpose and feed
 format. This allows for things like feed rotation to a new feed
-format, splitting data into separate feeds and to create special
+format, splitting data into separate (sub)feeds and to create special
 indexing feeds for partial replication.
 
 A meta feed is tied to a single identity and thus should only be used
 on a single device. There is a separate [fusion identity] protocol
 that only deals with how to relate multiple devices to a single
-identity. This spec is not for that.
+identity. This spec here is not for that use-case.
 
 Meta feeds will use a specialized [feed
 format](https://github.com/ssb-ngi-pointer/bipfy-badger-spec) that
 aims be very easy to implement. The aim is that this will make it
-easier for implementations that does not need to support the classical
-SSB format.
+easier for implementations which do not need or want to support
+the classical SSB format.
 
 ## Example of a meta feed
 
-An example of a meta feed with 2 feeds: a main social feed and an 
-applications meta feed.
+Here is an an example of a meta feed with 2 sub feeds: one for `main` social data and another one 
+for `application-x` in a different format.
 
 ![Diagram](./metafeed-example1.svg)
 <details>
@@ -40,7 +40,7 @@ digraph metafeed {
   
   edge [tailclip=false];
   a [label="{ <ref> | <data> main }"]
-  b [label="{ <ref> | <data> applications }"];
+  b [label="{ <ref> | <data> application-x }"];
   b:ref:a -> a:data [arrowhead=vee, arrowtail=dot, dir=both];
 }
 </details>
@@ -48,7 +48,7 @@ digraph metafeed {
 Contents of the messages in the meta feed that acts as meta data for
 feeds:
 
-```
+```js
 { 
   type: 'metafeed/add', 
   feedformat: 'classic', 
@@ -57,40 +57,37 @@ feeds:
   tangles: {
     metafeed: { root: null, previous: null }
   },
-  ...
+  //...
 },
 { 
   type: 'metafeed/add', 
   feedformat: 'bamboo', 
-  feedpurpose: 'applications', 
-  subfeed: '@applications',
-  ...
+  feedpurpose: 'application-x', 
+  subfeed: '@application-x',
+  //...
 }
 ```
 
-Initially two operations are supported: `add` and `tombstone`. Note,
-signatures (see key management section) are left out in the examples
-here.
+Initially the meta feed spec supports two operations: `add` and `tombstone`.
+**Note**, signatures (see key management section) are left out in the examples here.
 
-Tombstoning means that the feed is no longer part of the meta
-feed. Whether or not the sub feed itself is tombstoned is a separate
-concern.
+Tombstoning means that the feed is no longer part of the meta feed.
+Whether or not the sub feed itself is tombstoned is a separate concern.
 
 Example tombstone message:
 
-```
+```js
 { 
   type: 'metafeed/tombstone',
   subfeed: '@applications',
   reason: '',
   tangles: {
-    metafeed: { root: %addmsg, previous: %addmsg }
+    metafeed: { root: "%addmsg", previous: "%addmsg" }
   }
 }
 ```
 
-Updating the metadata on a feed in a meta feed is currently not
-supported.
+Updating the metadata on a sub feed which is a member of a meta feed is currently not supported.
 
 ## Applications example
 
@@ -113,7 +110,7 @@ digraph Applications {
 }
 </details>
 
-```
+```js
 { 
   type: 'metafeed/add', 
   feedformat: 'classic', 
@@ -133,33 +130,33 @@ digraph Applications {
 ## Key management, identity and metadata
 
 As mentioned earlier, in classical SSB the feed identity is the same
-as the feed. Here instead we want to decouple the identity and feeds.
+as the feed. Here instead we want to decouple identity and feeds.
 
 ### Existing SSB identity
 
-To generate a meta feed and link that to the main feed, first a seed
+To generate a meta feed and link it to an existing `main` feed, first a seed
 is generated:
 
-```
+```js
 const seed = crypto.randomBytes(32)
 ```
 
 From this seed, a meta feed can be generated using:
 
-```
+```js
 const prk = hkdf.extract(lhash, hash_len, seed, salt)
 const mf_info = "ssb-meta-feed-seed-v1:metafeed"
 const mf_seed = hkdf.expand(hash, hash_len, prk, length, mf_info)
 const mf_key = ssbKeys.generate("ed25519", mf_seed)
 ```
 
-Note we use 'metafeed' here in the info. As the top meta feed is
-special we use that string, for all other derived feeds the nonce from
-the message where it is added to the meta feed is used.
+Note we use `metafeed` here in the info. As the top/genesis meta feed is
+special we use that string, for all other derived feeds a nonce is used,
+which is also published in the corresponding `metafeed/add` message.
 
-We then encrypt the seed as a private message to the main feed. 
+We also encrypt the seed as a private message to the `main` feed. 
 
-```
+```js
 {
   type: 'metafeed/seed',
   metafeed: '@metafeed',
@@ -167,15 +164,52 @@ We then encrypt the seed as a private message to the main feed.
 }
 ```
 
-By doing this we allow the main feed to reconstruct the meta feed and
+By doing so we allow the existing feed to reconstruct the meta feed and
 all sub feeds from this seed.
 
-Then the meta feed is linked with the main feed using a new message on
-the meta feed signed by both the main feed and the meta feed. For
-details this see the [feed
-format](https://github.com/ssb-ngi-pointer/bipfy-badger-spec).
+Then the meta feed is linked with the existing `main` feed using a new message on
+the meta feed signed by both the `main` feed and the meta feed. For
+details this see the [feed format](https://github.com/ssb-ngi-pointer/bipfy-badger-spec).
 
+```js
+{
+  type: 'metafeed/add',
+  feedformat: 'clasic',
+  feedpurpose: 'main',
+  subfeed: '@main',
+  metafeed: '@mf', 
+  tangles: {
+    metafeed: { root: null, previous: null }
+  }
+}
 ```
+
+In order for existing applications to know that the existing feed supports meta
+feeds, a special message is created on the `main` feed:
+
+```js
+{ 
+  content: {
+    type: 'metafeed/announce',
+    metafeed: '@mf',
+    tangles: {
+      metafeed: { root: null, previous: null }
+    }
+  }
+}
+```
+
+A feed can only have **one** meta feed. If for whatever reason an existing
+meta feed needs to be superseed, a new message is created pointing to
+the previous `metafeed/announce` message via the tangle.
+
+### New SSB identity
+
+A new identity also starts by constructing a seed. From this seed both the
+meta feed keys and the main feed keys are generated. The main should
+use the info: `ssb-meta-feed-seed-v1:<base64 encoded nonce>` and the `nonce` is also published as part of the `metafeed/add` message on the meta feed.
+
+```js
 {
   type: 'metafeed/add',
   feedformat: 'clasic',
@@ -188,32 +222,6 @@ format](https://github.com/ssb-ngi-pointer/bipfy-badger-spec).
   }
 }
 ```
-
-In order for existing applications to know that a feed supports meta
-feeds, a special message is created on the main feed:
-
-```
-{ 
-  content: {
-    type: 'metafeed/announce',
-    metafeed: '@mf',
-    tangles: {
-      metafeed: { root: null, previous: null }
-    }
-  }
-}
-```
-
-A feed can only have one meta feed. If for whatever reason an existing
-meta feed needs to be superseed, a new message is created pointing to
-the previous `metafeed/announce` message.
-
-### New SSB identity
-
-A new identity starts by constructing a seed. From this seed both the
-meta feed keys and the main feed keys are generated. The main should
-use the info: "ssb-meta-feed-seed-v1:" + base64 encoded nonce of the
-message on the meta feed.
 
 The seed will also be encrypted to the main feed and the meta feed
 linked to the main feed just like for existing feeds.
@@ -252,7 +260,7 @@ feed to the meta feed state, and by adding a tombstone message to the
 old feed pointing and assigning the new feed as active in the meta
 feed.
 
-In case of backwards compability with clients that does not support a
+In case of backwards compability with clients that do not support a
 newer feed format or in the case of only wanting to support newer feed
 formats, maintaining muliple feeds with the same content would be an
 interesting avenue to explore. As the hash of the messages in the two
