@@ -142,6 +142,7 @@ const seed = crypto.randomBytes(32)
 From this seed, a meta feed can be generated using:
 
 ```js
+const salt = 'ssb'
 const prk = hkdf.extract(lhash, hash_len, seed, salt)
 const mf_info = "ssb-meta-feed-seed-v1:metafeed"
 const mf_seed = hkdf.expand(hash, hash_len, prk, length, mf_info)
