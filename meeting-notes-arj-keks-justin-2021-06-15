@@ -30,6 +30,32 @@ terminology here.
 
 https://github.com/ssb-ngi-pointer/ssb-secure-partial-replication-spec
 
+Notes from Justin:
+
+Claims and Audits
+"...it MIGHT make sense for others to create claims and audit that these claims are indeed valid indexes."
+what is meant by MIGHT? Is this part of the protocol or just an idea? Can this step be omitted?
+
+
+"Because feeds are immutable, once you have verified a feed up until sequence x the past can never change."
+Who is verifying the claim? If bob is verifying Alice's feed, who gave Bob authority. Could Bob not verify until to sequence X, which would prevent Alice's feed from immutability? Ie. Alice could re-write the feed with Bob's help? Or is validation distributed amongst peers?
+
+
+"In order not to create too many verification messages, a new message should only be posted if claim is no longer valid."
+who is creating verification messages? Do I ask verification of my own messages, or do I ask to verify someone else's. If the claim is invalid, does the refer to reopening a claim? Or does this refer to validating a claim?
+
+
+"How often claims should be verified is at the discretion of the auditor."
+Who is the auditor? Who gives them the authority?
+
+
+"It is worth noting that it is limited what a malicious peer could do. The messages in a claim still needs to be signed by the author, so at worst messages can be left out."
+This still amounts to DoS, as messages could be prevented from circulating
+
+
+
+Notes from talk
+
 There were some question around who could audit, also who could change
 an audit (only self). That probably needs a bit of clarification.
 
