@@ -56,6 +56,9 @@ The `content` dictionary inside the `contentSection` of meta feed messages
  - A `metafeed` field with a feed ID
  - A `nonce` field with 32 bytes of random data
 
+The `contentSignature` field inside `contentSection` **MUST** use the
+`subfeed`'s cryptographic keypair.
+
 ## Example of a meta feed
 
 Here is an an example of a meta feed with 2 sub feeds: one for `main`
