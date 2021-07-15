@@ -2,6 +2,8 @@
 
 Status: Ready for implementation
 
+## Abstract
+
 In classical SSB an identity is tied to a single feed. All messages
 for different kinds of applications are posted to this single
 feed. While it is possible to create multiple feeds, there has been no
@@ -20,10 +22,39 @@ on a single device. There is a separate [fusion identity] protocol
 that only deals with how to relate multiple devices to a single
 identity. This spec here is not for that use-case.
 
-Meta feeds will use a specialized [bendy butt feed format] that aims
-be very easy to implement. The aim is that this will make it easier
-for implementations which do not need or want to support the classical
-SSB format.
+Meta feeds will use a specialized feed format known as [bendy butt] that aims
+to be very easy to implement. The aim is that this will make it easier for
+implementations which do not need or want to support the classical SSB format.
+
+## Definitions
+
+The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT", "SHOULD",
+"SHOULD NOT", "RECOMMENDED", "MAY", and "OPTIONAL" in this document are to be
+interpreted as described in RFC 2119.
+
+We shall use the notation `[a b c]` to denote a [bencode] list, and the
+notation `a + b + c` to denote byte concatenation.
+
+## Usage of Bendy Butt feed format
+
+Meta feeds **MUST** use the [bendy butt] feed format with a few additional
+constraints. In this document, we describe the `content` field in JSON just for
+illustrative purposes, because in reality the `content` is encoded in [bencode]
+and [SSB-BFE].
+
+The `content` dictionary inside the `contentSection` of meta feed messages
+**MUST** conform to the following rules:
+
+ - A `type` field with a string value of only the following values
+   possible:
+   - `metafeed/add`
+   - `metafeed/update`
+   - `metafeed/announce`
+   - `metafeed/seed`
+   - `metafeed/tombstone`
+ - A `subfeed` field with a feed ID
+ - A `metafeed` field with a feed ID
+ - A `nonce` field with 32 bytes of random data
 
 ## Example of a meta feed
 
@@ -36,7 +67,7 @@ digraph metafeed {
 
   rankdir=RL
   node [shape=record];
-  
+
   edge [tailclip=false];
   a [label="{ <ref> | <data> main }"]
   b [label="{ <ref> | <data> application-x }"];
@@ -48,9 +79,9 @@ Contents of the messages in the meta feed that acts as meta data for
 feeds:
 
 ```js
-{ 
-  type: 'metafeed/add', 
-  feedpurpose: 'main', 
+{
+  type: 'metafeed/add',
+  feedpurpose: 'main',
   subfeed: '@main.ed25519',
   metafeed: '@meta-it-belongs-to.bbfeed-v1',
   tangles: {
@@ -58,9 +89,9 @@ feeds:
   },
   //...
 },
-{ 
-  type: 'metafeed/add', 
-  feedpurpose: 'application-x', 
+{
+  type: 'metafeed/add',
+  feedpurpose: 'application-x',
   subfeed: '@application-x.bamboo',
   metafeed: '@meta-it-belongs-to.bbfeed-v1',
   //...
@@ -78,7 +109,7 @@ concern.
 Example tombstone message:
 
 ```js
-{ 
+{
   type: 'metafeed/tombstone',
   subfeed: '@application-x.bamboo',
   metafeed: '@meta-it-belongs-to.bbfeed-v1',
@@ -92,9 +123,9 @@ Example tombstone message:
 Updating the metadata on a sub feed which is a member of a meta feed
 is currently not supported.
 
-**Note**: while the `metafeed: ...` field on the add and tombstone messages seems redundant,
-it is important to have it and check that the `metafeed` field equals the author of the metafeed itself
-to protect against replay attacks.
+**Note**: while the `metafeed: ...` field on the add and tombstone messages
+seems redundant, it is important to have it and check that the `metafeed` field
+equals the author of the metafeed itself to protect against replay attacks.
 
 ## Applications example
 
@@ -112,21 +143,21 @@ digraph Applications {
   edge [tailclip=false];
   a [label="{ <ref> | <data> App1 }"]
   b [label="{ <ref> | <data> App2 }"];
-  
+
   b:ref:a -> a:data [arrowhead=vee, arrowtail=dot, dir=both];
 }
 </details>
 
 ```js
-{ 
-  type: 'metafeed/add', 
-  feedpurpose: 'gathering' 
+{
+  type: 'metafeed/add',
+  feedpurpose: 'gathering'
   subfeed: '@app1.ed25519',
   ...
 },
-{ 
-  type: 'metafeed/add', 
-  feedpurpose: 'chess' 
+{
+  type: 'metafeed/add',
+  feedpurpose: 'chess'
   subfeed: '@app2.ed25519',
   ...
 }
@@ -160,7 +191,7 @@ Note we use `metafeed` here in the info. As the top/genesis meta feed is
 special we use that string, for all other derived feeds a nonce is used,
 which is also published in the corresponding `metafeed/add` message.
 
-We also encrypt the seed as a private message to the `main` feed. 
+We also encrypt the seed as a private message to the `main` feed.
 
 ```js
 {
@@ -175,14 +206,14 @@ all sub feeds from this seed.
 
 Then the meta feed is linked with the existing `main` feed using a new
 message on the meta feed signed by both the `main` feed and the meta
-feed. For details this see [bendy butt feed format].
+feed. For details this see [bendy butt].
 
 ```js
 {
   type: 'metafeed/add',
   feedpurpose: 'main',
   subfeed: '@main.ed25519',
-  metafeed: '@mf.bbfeed-v1', 
+  metafeed: '@mf.bbfeed-v1',
   tangles: {
     metafeed: { root: null, previous: null }
   }
@@ -193,7 +224,7 @@ In order for existing applications to know that the existing feed
 supports meta feeds, a special message is created on the `main` feed:
 
 ```js
-{ 
+{
   content: {
     type: 'metafeed/announce',
     metafeed: '@mf.bbfeed-v1',
@@ -221,7 +252,7 @@ message on the meta feed.
   type: 'metafeed/add',
   feedpurpose: 'main',
   subfeed: '@main.ed25519',
-  metafeed: '@mf.bbfeed-v1', 
+  metafeed: '@mf.bbfeed-v1',
   nonce: '<random_32_bytes_as_base64>',
   tangles: {
     metafeed: { root: null, previous: null }
@@ -235,8 +266,8 @@ linked to the main feed just like for existing feeds.
 ### Identity backwards compatibility
 
 By building a layer on top of existing feeds we maintain backwards
-compatible with existing clients. The identity to be used by new 
-applications should be that of the meta feed. For backwards 
+compatible with existing clients. The identity to be used by new
+applications should be that of the meta feed. For backwards
 compatibility contact messages forming the follow graph together with
 secret handshake will continue to use the key of the main feed.
 
@@ -328,4 +359,6 @@ CFT suggested the use of meta feeds
 [BIP32-Ed25519]: https://github.com/wallet-io/bip32-ed25519/blob/master/doc/Ed25519_BIP.pdf
 [ssb-secure-partial-replication]: https://github.com/ssb-ngi-pointer/ssb-secure-partial-replication
 [fusion identity]: https://github.com/ssb-ngi-pointer/fusion-identity-spec/
-[bendy butt feed format]: https://github.com/ssb-ngi-pointer/bendy-butt-spec
+[bencode]: https://en.wikipedia.org/wiki/Bencode
+[SSB-BFE]: https://github.com/ssb-ngi-pointer/ssb-binary-field-encodings
+[bendy butt]: https://github.com/ssb-ngi-pointer/bendy-butt-spec
