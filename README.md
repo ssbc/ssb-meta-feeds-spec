@@ -52,6 +52,7 @@ feeds:
   type: 'metafeed/add', 
   feedpurpose: 'main', 
   subfeed: '@main.ed25519',
+  metafeed: '@meta-it-belongs-to.bbfeed-v1',
   tangles: {
     metafeed: { root: null, previous: null }
   },
@@ -61,6 +62,7 @@ feeds:
   type: 'metafeed/add', 
   feedpurpose: 'application-x', 
   subfeed: '@application-x.bamboo',
+  metafeed: '@meta-it-belongs-to.bbfeed-v1',
   //...
 }
 ```
@@ -79,6 +81,7 @@ Example tombstone message:
 { 
   type: 'metafeed/tombstone',
   subfeed: '@application-x.bamboo',
+  metafeed: '@meta-it-belongs-to.bbfeed-v1',
   reason: '',
   tangles: {
     metafeed: { root: "%addmsg", previous: "%addmsg" }
@@ -88,6 +91,10 @@ Example tombstone message:
 
 Updating the metadata on a sub feed which is a member of a meta feed
 is currently not supported.
+
+**Note**: while the `metafeed: ...` field on the add and tombstone messages seems redundant,
+it is important to have it and check that the `metafeed` field equals the author of the metafeed itself
+to protect against replay attacks.
 
 ## Applications example
 
