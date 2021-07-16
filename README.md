@@ -54,7 +54,8 @@ The `content` dictionary inside the `contentSection` of meta feed messages
    - `metafeed/tombstone`
  - A `subfeed` field with a feed ID
  - A `metafeed` field with a feed ID
- - A `nonce` field with 32 bytes of random data
+ - Only if the `type` is `metafeed/add`: a `nonce` field with 32 bytes of random
+ data
 
 The `contentSignature` field inside `contentSection` **MUST** use the
 `subfeed`'s cryptographic keypair.
@@ -256,7 +257,7 @@ message on the meta feed.
   feedpurpose: 'main',
   subfeed: '@main.ed25519',
   metafeed: '@mf.bbfeed-v1',
-  nonce: '<random_32_bytes_as_base64>',
+  nonce: '<random_32_bytes>',
   tangles: {
     metafeed: { root: null, previous: null }
   }
