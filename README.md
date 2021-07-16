@@ -46,7 +46,6 @@ The `content` dictionary inside the `contentSection` of meta feed messages
  can assume only one the following possible values:
    - `metafeed/add`
    - `metafeed/update`
-   - `metafeed/announce`
    - `metafeed/seed`
    - `metafeed/tombstone`
  - Has a `subfeed` field mapping to a BFE "feed ID", i.e. `<00> + format + data`
@@ -229,8 +228,9 @@ feed. For details this see [bendy butt].
 ```
 
 In order for existing applications to know that the existing feed
-supports meta feeds, a special message is created on the `main` feed (notice
-this is JSON, because the main feed is not in Bendy Butt):
+supports meta feeds, a special message of type `metafeed/announce`
+is created on the `main` feed (notice this is JSON, because the 
+ main feed is not in Bendy Butt):
 
 ```js
 {
