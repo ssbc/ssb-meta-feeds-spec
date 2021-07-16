@@ -32,33 +32,31 @@ The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT", "SHOULD",
 "SHOULD NOT", "RECOMMENDED", "MAY", and "OPTIONAL" in this document are to be
 interpreted as described in RFC 2119.
 
-We shall use the notation `[a b c]` to denote a [bencode] list, and the
-notation `a + b + c` to denote byte concatenation.
+We use bencode and BFE notations as defined in the [bendy butt] spec.
 
 ## Usage of Bendy Butt feed format
 
 Meta feeds **MUST** use the [bendy butt] feed format with a few additional
-constraints. In this document, we describe the `content` field in JSON just for
-illustrative purposes, because in reality the `content` is encoded in [bencode]
-and [SSB-BFE].
+constraints.
 
 The `content` dictionary inside the `contentSection` of meta feed messages
 **MUST** conform to the following rules:
 
- - A `type` field with a string value of only the following values
-   possible:
+ - Has a `type` field mapping to a BFE string (i.e. `<06 00> + data`) which
+ can assume only one the following possible values:
    - `metafeed/add`
    - `metafeed/update`
    - `metafeed/announce`
    - `metafeed/seed`
    - `metafeed/tombstone`
- - A `subfeed` field with a feed ID
- - A `metafeed` field with a feed ID
- - Only if the `type` is `metafeed/add`: a `nonce` field with 32 bytes of random
- data
+ - Has a `subfeed` field mapping to a BFE "feed ID", i.e. `<00> + format + data`
+ - Has a `metafeed` field mapping to a BFE "Bendy Butt feed ID", i.e.
+ `<00 03> + data`
+ - (Only if the `type` is `metafeed/add`): a `nonce` field mapping to 32 random
+ bytes in bencode
 
-The `contentSignature` field inside `contentSection` **MUST** use the
-`subfeed`'s cryptographic keypair.
+The `contentSignature` field inside a decrypted `contentSection` **MUST** use
+the `subfeed`'s cryptographic keypair.
 
 ## Example of a meta feed
 
@@ -79,26 +77,26 @@ digraph metafeed {
 }
 </details>
 
-Contents of the messages in the meta feed that acts as meta data for
-feeds:
+Contents of messages in the meta feed that acts as meta data for feeds:
 
-```js
+```
 {
-  type: 'metafeed/add',
-  feedpurpose: 'main',
-  subfeed: '@main.ed25519',
-  metafeed: '@meta-it-belongs-to.bbfeed-v1',
-  tangles: {
-    metafeed: { root: null, previous: null }
+  "type" => "metafeed/add",
+  "feedpurpose" => "main",
+  "subfeed" => (BFE-encoded feed ID for the 'main' feed),
+  "metafeed" => (BFE-encoded Bendy Butt feed ID for the meta feed),
+  "tangles" => {
+    "metafeed" => {
+      "root" => null,
+      "previous" => null
+    }
   },
-  //...
 },
 {
-  type: 'metafeed/add',
-  feedpurpose: 'application-x',
-  subfeed: '@application-x.bamboo',
-  metafeed: '@meta-it-belongs-to.bbfeed-v1',
-  //...
+  "type" => "metafeed/add",
+  "feedpurpose" => "application-x",
+  "subfeed" => (BFE-encoded Bamboo feed ID),
+  "metafeed" => (BFE-encoded Bendy Butt feed ID for the meta feed),
 }
 ```
 
@@ -112,14 +110,17 @@ concern.
 
 Example tombstone message:
 
-```js
+```
 {
-  type: 'metafeed/tombstone',
-  subfeed: '@application-x.bamboo',
-  metafeed: '@meta-it-belongs-to.bbfeed-v1',
-  reason: '',
-  tangles: {
-    metafeed: { root: "%addmsg", previous: "%addmsg" }
+  "type" => "metafeed/tombstone",
+  "subfeed" => (BFE-encoded Bamboo feed ID),
+  "metafeed" => (BFE-encoded Bendy Butt feed ID for the meta feed),
+  "reason" => (some BFE string),
+  "tangles" => {
+    "metafeed" => {
+      "root" => (BFE-encoded message ID of the "metafeed/add" message),
+      "previous" => (BFE-encoded message ID of the "metafeed/add" message),
+    }
   }
 }
 ```
@@ -152,18 +153,18 @@ digraph Applications {
 }
 </details>
 
-```js
+```
 {
-  type: 'metafeed/add',
-  feedpurpose: 'gathering'
-  subfeed: '@app1.ed25519',
-  ...
+  "type" => "metafeed/add",
+  "feedpurpose" => "gathering",
+  "subfeed" => (BFE-encoded feed ID dedicated for the gathering app),
+  (other fields...)
 },
 {
-  type: 'metafeed/add',
-  feedpurpose: 'chess'
-  subfeed: '@app2.ed25519',
-  ...
+  "type" => "metafeed/add",
+  "feedpurpose" => "chess"
+  "subfeed" => (BFE-encoded feed ID dedicated for the chess app),
+  (other fields...)
 }
 ```
 
@@ -197,11 +198,11 @@ which is also published in the corresponding `metafeed/add` message.
 
 We also encrypt the seed as a private message to the `main` feed.
 
-```js
+```
 {
-  type: 'metafeed/seed',
-  metafeed: '@metafeed',
-  seed: <base64_encoded_seed>
+  "type" => "metafeed/seed",
+  "metafeed" => (BFE-encoded Bendy Butt feed ID),
+  "seed" => (BFE string of the base64-stringified seed byte sequence)
 }
 ```
 
@@ -212,28 +213,36 @@ Then the meta feed is linked with the existing `main` feed using a new
 message on the meta feed signed by both the `main` feed and the meta
 feed. For details this see [bendy butt].
 
-```js
+```
 {
-  type: 'metafeed/add',
-  feedpurpose: 'main',
-  subfeed: '@main.ed25519',
-  metafeed: '@mf.bbfeed-v1',
-  tangles: {
-    metafeed: { root: null, previous: null }
+  "type" => "metafeed/add",
+  "feedpurpose" => "main",
+  "subfeed" => (BFE-encoded feed ID for the 'main' feed),
+  "metafeed" => (BFE-encoded Bendy Butt feed ID for the meta feed),
+  "tangles" => {
+    "metafeed" => {
+      "root" => (BFE nil),
+      "previous" => (BFE nil)
+    }
   }
 }
 ```
 
 In order for existing applications to know that the existing feed
-supports meta feeds, a special message is created on the `main` feed:
+supports meta feeds, a special message is created on the `main` feed (notice
+this is JSON, because the main feed is not in Bendy Butt):
 
 ```js
 {
+  // ... other msg.value field ...
   content: {
     type: 'metafeed/announce',
     metafeed: '@mf.bbfeed-v1',
     tangles: {
-      metafeed: { root: null, previous: null }
+      metafeed: {
+        root: null,
+        previous: null
+      }
     }
   }
 }
@@ -251,15 +260,18 @@ should use the info: `ssb-meta-feed-seed-v1:<base64 encoded nonce>`
 and the `nonce` is also published as part of the `metafeed/add`
 message on the meta feed.
 
-```js
+```
 {
-  type: 'metafeed/add',
-  feedpurpose: 'main',
-  subfeed: '@main.ed25519',
-  metafeed: '@mf.bbfeed-v1',
-  nonce: '<random_32_bytes>',
-  tangles: {
-    metafeed: { root: null, previous: null }
+  "type" => "metafeed/add",
+  "feedpurpose" => "main",
+  "subfeed" => (BFE-encoded feed ID for the 'main' feed),
+  "metafeed" => (BFE-encoded Bendy Butt feed ID for the meta feed),
+  "nonce" => (bencode byte sequence with 32 random bytes),
+  "tangles" => {
+    "metafeed" => {
+      "root" => null,
+      "previous" => null
+    }
   }
 }
 ```
