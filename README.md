@@ -46,7 +46,6 @@ The `content` dictionary inside the `contentSection` of meta feed messages
  can assume only one the following possible values:
    - `metafeed/add`
    - `metafeed/update`
-   - `metafeed/seed`
    - `metafeed/tombstone`
  - Has a `subfeed` field mapping to a BFE "feed ID", i.e. `<00> + format + data`
  - Has a `metafeed` field mapping to a BFE "Bendy Butt feed ID", i.e.
