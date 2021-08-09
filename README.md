@@ -50,8 +50,6 @@ The `content` dictionary inside the `contentSection` of meta feed messages
  - Has a `subfeed` field mapping to a BFE "feed ID", i.e. `<00> + format + data`
  - Has a `metafeed` field mapping to a BFE "Bendy Butt feed ID", i.e.
  `<00 03> + data`
- - (Only if the `type` is `metafeed/add`): a `nonce` field mapping to 32 random
- bytes in bencode
 
 The `contentSignature` field inside a decrypted `contentSection` **MUST** use
 the `subfeed`'s cryptographic keypair.
