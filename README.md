@@ -51,8 +51,8 @@ The `content` dictionary inside the `contentSection` of meta feed messages
  - Has a `subfeed` field mapping to a BFE "feed ID", i.e. `<00> + format + data`
  - Has a `metafeed` field mapping to a BFE "Bendy Butt feed ID", i.e.
  `<00 03> + data`
- - (Only if the `type` is `metafeed/add/derived`): a `nonce` field mapping 
-to 32 random bytes in bencode
+ - (Only if the `type` is `metafeed/add/derived`): a `nonce` field mapping
+to a BFE "arbitrary bytes" with size 32, i.e. `<06 03> + nonce32bytes`
 
 The `contentSignature` field inside a decrypted `contentSection` **MUST** use
 the `subfeed`'s cryptographic keypair.
@@ -100,7 +100,7 @@ Contents of messages in the meta feed that acts as meta data for feeds:
 ```
 
 Initially the meta feed spec supports three operations: `add/existing`
-`add/derived`, and `tombstone`. **Note**, signatures (see key 
+`add/derived`, and `tombstone`. **Note**, signatures (see key
 management section) are left out in the examples here.
 
 Tombstoning means that the feed is no longer part of the meta feed.
@@ -193,11 +193,11 @@ const mf_key = ssbKeys.generate("ed25519", mf_seed)
 
 Note we use `metafeed` here in the info. As the top/genesis meta feed is
 special we use that string, for all other derived feeds a nonce is used,
-which is also published in the corresponding `metafeed/add/derived` 
+which is also published in the corresponding `metafeed/add/derived`
 message.
 
 We also encrypt the seed as a private message from `main` to `main` (so
-it's a private message to yourself; notice this is JSON, because it's 
+it's a private message to yourself; notice this is JSON, because it's
 published on the main):
 
 ```
@@ -232,7 +232,7 @@ feed. For details this see [bendy butt].
 
 In order for existing applications to know that the existing feed
 supports meta feeds, a special message of type `metafeed/announce`
-is created on the `main` feed (notice this is JSON, because the 
+is created on the `main` feed (notice this is JSON, because the
  main feed is not in Bendy Butt):
 
 ```js
