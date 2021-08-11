@@ -44,14 +44,15 @@ The `content` dictionary inside the `contentSection` of meta feed messages
 
  - Has a `type` field mapping to a BFE string (i.e. `<06 00> + data`) which
  can assume only one the following possible values:
-   - `metafeed/add`
+   - `metafeed/add/existing`
+   - `metafeed/add/derived`
    - `metafeed/update`
    - `metafeed/tombstone`
  - Has a `subfeed` field mapping to a BFE "feed ID", i.e. `<00> + format + data`
  - Has a `metafeed` field mapping to a BFE "Bendy Butt feed ID", i.e.
  `<00 03> + data`
- - (Only if the `type` is `metafeed/add`): a `nonce` field mapping to 32 random
- bytes in bencode
+ - (Only if the `type` is `metafeed/add/derived`): a `nonce` field mapping
+to a BFE "arbitrary bytes" with size 32, i.e. `<06 03> + nonce32bytes`
 
 The `contentSignature` field inside a decrypted `contentSection` **MUST** use
 the `subfeed`'s cryptographic keypair.
@@ -79,7 +80,7 @@ Contents of messages in the meta feed that acts as meta data for feeds:
 
 ```
 {
-  "type" => "metafeed/add",
+  "type" => "metafeed/add/existing",
   "feedpurpose" => "main",
   "subfeed" => (BFE-encoded feed ID for the 'main' feed),
   "metafeed" => (BFE-encoded Bendy Butt feed ID for the meta feed),
@@ -91,16 +92,16 @@ Contents of messages in the meta feed that acts as meta data for feeds:
   },
 },
 {
-  "type" => "metafeed/add",
+  "type" => "metafeed/add/existing",
   "feedpurpose" => "application-x",
   "subfeed" => (BFE-encoded Bamboo feed ID),
   "metafeed" => (BFE-encoded Bendy Butt feed ID for the meta feed),
 }
 ```
 
-Initially the meta feed spec supports two operations: `add` and
-`tombstone`.  **Note**, signatures (see key management section) are
-left out in the examples here.
+Initially the meta feed spec supports three operations: `add/existing`
+`add/derived`, and `tombstone`. **Note**, signatures (see key
+management section) are left out in the examples here.
 
 Tombstoning means that the feed is no longer part of the meta feed.
 Whether or not the sub feed itself is tombstoned is a separate
@@ -153,13 +154,13 @@ digraph Applications {
 
 ```
 {
-  "type" => "metafeed/add",
+  "type" => "metafeed/add/derived",
   "feedpurpose" => "gathering",
   "subfeed" => (BFE-encoded feed ID dedicated for the gathering app),
   (other fields...)
 },
 {
-  "type" => "metafeed/add",
+  "type" => "metafeed/add/derived",
   "feedpurpose" => "chess"
   "subfeed" => (BFE-encoded feed ID dedicated for the chess app),
   (other fields...)
@@ -192,15 +193,18 @@ const mf_key = ssbKeys.generate("ed25519", mf_seed)
 
 Note we use `metafeed` here in the info. As the top/genesis meta feed is
 special we use that string, for all other derived feeds a nonce is used,
-which is also published in the corresponding `metafeed/add` message.
+which is also published in the corresponding `metafeed/add/derived`
+message.
 
-We also encrypt the seed as a private message to the `main` feed.
+We also encrypt the seed as a private message from `main` to `main` (so
+it's a private message to yourself; notice this is JSON, because it's
+published on the main):
 
 ```
 {
-  "type" => "metafeed/seed",
-  "metafeed" => (BFE-encoded Bendy Butt feed ID),
-  "seed" => (BFE string of the base64-stringified seed byte sequence)
+  "type": "metafeed/seed",
+  "metafeed": bendyButtFeedID,
+  "seed": seedBytesEncodedAsHexString
 }
 ```
 
@@ -213,7 +217,7 @@ feed. For details this see [bendy butt].
 
 ```
 {
-  "type" => "metafeed/add",
+  "type" => "metafeed/add/existing",
   "feedpurpose" => "main",
   "subfeed" => (BFE-encoded feed ID for the 'main' feed),
   "metafeed" => (BFE-encoded Bendy Butt feed ID for the meta feed),
@@ -228,7 +232,7 @@ feed. For details this see [bendy butt].
 
 In order for existing applications to know that the existing feed
 supports meta feeds, a special message of type `metafeed/announce`
-is created on the `main` feed (notice this is JSON, because the 
+is created on the `main` feed (notice this is JSON, because the
  main feed is not in Bendy Butt):
 
 ```js
@@ -256,12 +260,12 @@ pointing to the previous `metafeed/announce` message via the tangle.
 A new identity also starts by constructing a seed. From this seed both
 the meta feed keys and the main feed keys are generated. The main
 should use the info: `ssb-meta-feed-seed-v1:<base64 encoded nonce>`
-and the `nonce` is also published as part of the `metafeed/add`
+and the `nonce` is also published as part of the `metafeed/add/derived`
 message on the meta feed.
 
 ```
 {
-  "type" => "metafeed/add",
+  "type" => "metafeed/add/derived",
   "feedpurpose" => "main",
   "subfeed" => (BFE-encoded feed ID for the 'main' feed),
   "metafeed" => (BFE-encoded Bendy Butt feed ID for the meta feed),
