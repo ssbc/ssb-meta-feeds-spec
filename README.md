@@ -240,7 +240,7 @@ is created on the `main` feed (notice this is JSON, because the
   // ... other msg.value field ...
   content: {
     type: 'metafeed/announce',
-    metafeed: '@mf.bbfeed-v1',
+    metafeed: 'ssb:feed/benbybutt-v1/-oaWWDs8g73EZFUMfW37R_ULtFEjwKN_DczvdYihjbU=',
     tangles: {
       metafeed: {
         root: null,
