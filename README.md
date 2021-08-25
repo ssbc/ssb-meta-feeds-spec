@@ -203,7 +203,7 @@ published on the main):
 ```
 {
   "type": "metafeed/seed",
-  "metafeed": bendyButtFeedID,
+  "metafeed": ssb:feed/benbybutt-v1/bendyButtFeedID,
   "seed": seedBytesEncodedAsHexString
 }
 ```
