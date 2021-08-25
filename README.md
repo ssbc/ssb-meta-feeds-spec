@@ -203,7 +203,7 @@ published on the main):
 ```
 {
   "type": "metafeed/seed",
-  "metafeed": ssb:feed/benbybutt-v1/bendyButtFeedID,
+  "metafeed": ssb:feed/bendybutt-v1/bendyButtFeedID,
   "seed": seedBytesEncodedAsHexString
 }
 ```
@@ -240,7 +240,7 @@ is created on the `main` feed (notice this is JSON, because the
   // ... other msg.value field ...
   content: {
     type: 'metafeed/announce',
-    metafeed: 'ssb:feed/benbybutt-v1/-oaWWDs8g73EZFUMfW37R_ULtFEjwKN_DczvdYihjbU=',
+    metafeed: 'ssb:feed/bendybutt-v1/-oaWWDs8g73EZFUMfW37R_ULtFEjwKN_DczvdYihjbU=',
     tangles: {
       metafeed: {
         root: null,
