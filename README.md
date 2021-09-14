@@ -254,7 +254,7 @@ is created on the `main` feed (notice this is JSON, because the
 
 Note that `content.signature` should exist and should sign (using 
 the meta feed keys) the stringified `content` *without the 
-signature*, in a similar manner how the message signature 
+signature*, in a similar manner to how the message signature 
 `msg.value.signature` is constructed relative to `msg.value`. So
 `msg.value.signature` is signed with the `main` feed's keys, but
 `msg.value.content.signature` is signed with the meta feed keys.
