@@ -254,12 +254,13 @@ is created on the `main` feed (notice this is JSON, because the
 ```
 
 Note that MAIN_FEED_ID is the ID of the main feed, and that 
-`content.signature` should exist and should sign (using the meta
-feed keys) the stringified `content` *without the signature*, in
-a similar manner to how the message signature 
-`msg.value.signature` is constructed relative to `msg.value`. So
-`msg.value.signature` is signed with the `main` feed's keys, but
-`msg.value.content.signature` is signed with the meta feed keys.
+SIGNATURE_OF_THE_ABOVE is the signature (using the meta feed 
+keys) for the the stringified `content` *without* 
+`content.signature` itself, in a similar manner to how the 
+message signature `msg.value.signature` is constructed relative
+to `msg.value`. So `msg.value.signature` is signed with the 
+`main` feed's keys, but `msg.value.content.signature` is signed 
+with the *meta feed keys*.
  
 A feed can only have **one** meta feed. If for whatever reason an
 existing meta feed needs to be superseed, a new message is created
