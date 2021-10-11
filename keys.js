@@ -1,3 +1,7 @@
+// SPDX-FileCopyrightText: 2021 Anders Rune Jensen
+//
+// SPDX-License-Identifier: CC0-1.0
+
 const crypto = require("crypto")
 const ssbKeys = require('ssb-keys')
 const derive = require('derive-key')
