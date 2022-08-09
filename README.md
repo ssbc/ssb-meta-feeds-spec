@@ -65,7 +65,7 @@ the `subfeed`'s cryptographic keypair.
 
 ## Example of a metafeed
 
-Here is an an example of a metafeed with 2 sub feeds: one for `main`
+Here is an an example of a metafeed with 2 subfeeds: one for `main`
 social data and another one for `application-x` in a different format.
 
 ![Diagram](./metafeed-example1.svg)
@@ -110,7 +110,7 @@ Initially the metafeed spec supports three operations: `add/existing`
 management section) are left out in the examples here.
 
 Tombstoning means that the feed is no longer part of the metafeed.
-Whether or not the sub feed itself is tombstoned is a separate
+Whether or not the subfeed itself is tombstoned is a separate
 concern.
 
 Example tombstone message:
@@ -130,7 +130,7 @@ Example tombstone message:
 }
 ```
 
-Updating the metadata on a sub feed which is a member of a metafeed
+Updating the metadata on a subfeed which is a member of a metafeed
 is currently not supported.
 
 **Note**: while the `metafeed: ...` field on the add and tombstone messages
@@ -215,7 +215,7 @@ published on the main):
 ```
 
 By doing so we allow the existing feed to reconstruct the metafeed and
-all sub feeds from this seed.
+all subfeeds from this seed.
 
 Then the metafeed is linked with the existing `main` feed using a new
 message on the metafeed signed by both the `main` feed and the meta
@@ -313,7 +313,7 @@ in the case the main key being broken or stolen, you don't loose
 everything.
 
 If a key is reused in another part of the tree it must include a
-reference to the original sub feed or metafeed it was defined in. The
+reference to the original subfeed or metafeed it was defined in. The
 original place is the authorative place for its metadata.
 
 Using [BIP32-Ed25519] instead was considered but that method has a
@@ -353,9 +353,9 @@ messages were not left out. Naturally this comes down to trust
 then. Using the friend graph would be natural, as would using trustnet
 together with audits of these claims.
 
-### Sub feeds
+### Subfeeds
 
-Similar to claims it would be possible to create sub feeds that would
+Similar to claims it would be possible to create subfeeds that would
 only contain certain messages. This might be useful for specific
 apps. Another use case for this would be curated content, where
 specific messages are picked out that might be of particular interest
@@ -383,7 +383,7 @@ with private groups to better ensure safety.
 - In the case of claims, how are bad actors handled?
 - What are the broader consequences of ephemeral feeds. Maybe they can
 only be used in limited circumstances, and if so which ones?
-- For sub feeds and feed rotation what is the best way to handle
+- For subfeeds and feed rotation what is the best way to handle
   potentially overlapping messages
 
 ## Acknowledgments and prior work
