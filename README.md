@@ -173,6 +173,96 @@ digraph Applications {
 }
 ```
 
+## Tree structure
+
+Since a subfeed can be a metafeed itself, this means that the relationships
+between subfeeds and metafeeds is a tree. We refer to the top-most metafeed as
+the "root" metafeed.
+
+While a metafeed **MAY** contain any arbitrary subfeed, we prescribe a
+**RECOMMENDED** structure for the tree.
+
+Under the root metafeed, there **SHOULD** be only one *type* of subfeed:
+*versioning subfeeds*. For now, there **SHOULD** be only subfeed `v1`, but in
+the future, this spec will be extended to describe subfeed `v2` once it is time
+to deprecate `v1`.
+
+The subfeeds at the leafs of the tree contain actual content. Once there is a
+new versioning subfeed, the leaf feeds can be transferred under the new
+versioning subfeed via `metafeed/add/existing` messages, without having to
+recreate the leaf feeds. Thus, the tree structure is only concerned with the
+*organization* of feeds in order to assist partial replication. For example,
+by grouping together feeds that are part of the same application under a common
+metafeed, we can skip replication of those application feeds if they are not
+relevant to the user.
+
+### v1
+
+This section describes the specification of the organization of subfeeds under
+the `v1` versioning subfeed.
+
+To start with, the `v1` versioning subfeed **MUST** be created with the
+following `content` on the root metafeed:
+
+```
+{
+  "type" => "metafeed/add/derived",
+  "feedpurpose" => "v1",
+  "subfeed" => (BFE-encoded feed ID dedicated for the versioning subfeed),
+}
+```
+
+The feed format for `v1` **MUST** be [bendy butt], because it is a metafeed.
+
+The *direct* subfeeds of `v1` are the so-called *1st-byte feeds*. The actual
+application-specific subfeeds are under the 1st-byte feeds. The "1st byte"
+refers to 8 bits of entropy extracted from the application-specific subfeed, and
+can be represented by two hexadecimal digits.
+
+The purpose of the 1st-byte feeds is to *shard* the set of application-specific
+subfeeds into 256 separate groups, i.e. one for every octet. This way, if you
+are only interested in replicating a subset of the application-specific
+subfeeds, you can deterministically calculate the 1st-byte for those
+application-specific subfeeds, and then you know which 1st-byte feeds to
+replicate.
+
+When adding a new application-specific subfeed to the tree, the 1st-byte is
+calculated based on a "name", which is any string that the application can
+choose freely, but it is **RECOMMENDED** that this string be unique to the use
+case. Then, the 1st-byte is calculated by taking the first two hexadecimal
+digits of the following hash:
+
+FIXME: WHICH HASH ALGORITHM?
+
+```
+hash(concat(rootMetafeedId, hopefullyUniqueString))
+```
+
+The 1st-byte is then used to create a new 1st-byte feed, unless there is already
+one. There **MUST** be at most *one* 1st-byte feed for every unique octet. The
+`content` on the root metafeed for the feed **MUST** have the 1st-byte encoded
+as hexadecimal in the `feedpurpose` field of the `metafeed/add/derived` message,
+and the feed format **MUST** be [bendy butt], because 1st-byte feeds are
+metafeeds.
+
+Once the 1st-byte feed is created, the application-specific subfeeds can be
+added as subfeeds of that one, either as `metafeed/add/derived` or
+`metafeed/add/existing`.
+
+The following diagram is an example of the organization of subfeeds under the v1
+specification:
+
+```mermaid
+graph TB;
+  root --> v1
+  v1 --> 8a & 41 & cf & 32
+  8a --> main
+  41 --> gathering
+  41 --> chess
+  cf --> group1
+  32 --> group2
+```
+
 ## Key management, identity and metadata
 
 As mentioned earlier, in classical SSB the feed identity is the same
