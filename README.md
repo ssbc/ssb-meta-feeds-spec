@@ -240,10 +240,10 @@ hash(concat(rootMetafeedId, name))
 
 The 1st-byte is then used to create a new 1st-byte feed, unless there is already
 one. There **MUST** be at most *one* 1st-byte feed for every unique octet. The
-`content` on the root metafeed for the feed **MUST** have the 1st-byte encoded
-as hexadecimal in the `feedpurpose` field of the `metafeed/add/derived` message,
-and the feed format **MUST** be [bendy butt], because 1st-byte feeds are
-metafeeds.
+`content` on the root's message for the 1st-byte feed **MUST** have the
+1st byte encoded as hexadecimal in the `feedpurpose` field of the
+`metafeed/add/derived` message. The feed format for a 1st-byte feed **MUST** be
+[bendy butt], because they are metafeeds.
 
 Once the 1st-byte feed is created, the application-specific subfeeds can be
 added as subfeeds of that one, either as `metafeed/add/derived` or
