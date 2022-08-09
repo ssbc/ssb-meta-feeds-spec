@@ -4,7 +4,7 @@ SPDX-FileCopyrightText: 2021 Anders Rune Jensen
 SPDX-License-Identifier: CC-BY-4.0
 -->
 
-# SSB meta feed
+# SSB metafeed
 
 Status: Ready for implementation
 
@@ -16,19 +16,19 @@ feed. While it is possible to create multiple feeds, there has been no
 formal specification for how these feeds relate and what their
 purposes are.
 
-Meta feeds aim to solve these problems by tying an identity to a meta
-feed instead. A meta feed references other feeds (or even meta feeds) and
+Metafeeds aim to solve these problems by tying an identity to a metafeed
+instead. A metafeed references other feeds (or even metafeeds) and
 contains metadata about the feed including purpose and feed
 format. This allows for things like feed rotation to a new feed
 format, splitting data into separate (sub)feeds and to create special
 indexing feeds for partial replication.
 
-A meta feed is tied to a single identity and thus should only be used
+A metafeed is tied to a single identity and thus should only be used
 on a single device. There is a separate [fusion identity] protocol
 that only deals with how to relate multiple devices to a single
 identity. This spec here is not for that use-case.
 
-Meta feeds will use a specialized feed format known as [bendy butt] that aims
+Metafeeds will use a specialized feed format known as [bendy butt] that aims
 to be very easy to implement. The aim is that this will make it easier for
 implementations which do not need or want to support the classical SSB format.
 
@@ -42,7 +42,7 @@ We use bencode and BFE notations as defined in the [bendy butt] spec.
 
 ## Usage of Bendy Butt feed format
 
-Meta feeds **MUST** use the [bendy butt] feed format with a few additional
+Metafeeds **MUST** use the [bendy butt] feed format with a few additional
 constraints.
 
 The `content` dictionary inside the `contentSection` of meta feed messages
@@ -63,9 +63,9 @@ to a BFE "arbitrary bytes" with size 32, i.e. `<06 03> + nonce32bytes`
 The `contentSignature` field inside a decrypted `contentSection` **MUST** use
 the `subfeed`'s cryptographic keypair.
 
-## Example of a meta feed
+## Example of a metafeed
 
-Here is an an example of a meta feed with 2 sub feeds: one for `main`
+Here is an an example of a metafeed with 2 sub feeds: one for `main`
 social data and another one for `application-x` in a different format.
 
 ![Diagram](./metafeed-example1.svg)
@@ -82,14 +82,14 @@ digraph metafeed {
 }
 </details>
 
-Contents of messages in the meta feed that acts as meta data for feeds:
+Contents of messages in the metafeed that acts as metadata for feeds:
 
 ```
 {
   "type" => "metafeed/add/existing",
   "feedpurpose" => "main",
   "subfeed" => (BFE-encoded feed ID for the 'main' feed),
-  "metafeed" => (BFE-encoded Bendy Butt feed ID for the meta feed),
+  "metafeed" => (BFE-encoded Bendy Butt feed ID for the metafeed),
   "tangles" => {
     "metafeed" => {
       "root" => null,
@@ -101,15 +101,15 @@ Contents of messages in the meta feed that acts as meta data for feeds:
   "type" => "metafeed/add/existing",
   "feedpurpose" => "application-x",
   "subfeed" => (BFE-encoded Bamboo feed ID),
-  "metafeed" => (BFE-encoded Bendy Butt feed ID for the meta feed),
+  "metafeed" => (BFE-encoded Bendy Butt feed ID for the metafeed),
 }
 ```
 
-Initially the meta feed spec supports three operations: `add/existing`
+Initially the metafeed spec supports three operations: `add/existing`
 `add/derived`, and `tombstone`. **Note**, signatures (see key
 management section) are left out in the examples here.
 
-Tombstoning means that the feed is no longer part of the meta feed.
+Tombstoning means that the feed is no longer part of the metafeed.
 Whether or not the sub feed itself is tombstoned is a separate
 concern.
 
@@ -119,7 +119,7 @@ Example tombstone message:
 {
   "type" => "metafeed/tombstone",
   "subfeed" => (BFE-encoded Bamboo feed ID),
-  "metafeed" => (BFE-encoded Bendy Butt feed ID for the meta feed),
+  "metafeed" => (BFE-encoded Bendy Butt feed ID for the metafeed),
   "reason" => (some BFE string),
   "tangles" => {
     "metafeed" => {
@@ -130,7 +130,7 @@ Example tombstone message:
 }
 ```
 
-Updating the metadata on a sub feed which is a member of a meta feed
+Updating the metadata on a sub feed which is a member of a metafeed
 is currently not supported.
 
 **Note**: while the `metafeed: ...` field on the add and tombstone messages
@@ -139,7 +139,7 @@ equals the author of the metafeed itself to protect against replay attacks.
 
 ## Applications example
 
-An example of the applications meta feed with two different
+An example of the applications metafeed with two different
 applications.
 
 ![Diagram2](./metafeed-example2.svg)
@@ -180,14 +180,14 @@ as the feed. Here instead we want to decouple identity and feeds.
 
 ### Existing SSB identity
 
-To generate a meta feed and link it to an existing `main` feed, first
+To generate a metafeed and link it to an existing `main` feed, first
 a seed is generated:
 
 ```js
 const seed = crypto.randomBytes(32)
 ```
 
-From this seed, a meta feed can be generated using:
+From this seed, a metafeed can be generated using:
 
 ```js
 const salt = 'ssb'
@@ -197,7 +197,7 @@ const mf_seed = hkdf.expand(hash, hash_len, prk, length, mf_info)
 const mf_key = ssbKeys.generate("ed25519", mf_seed)
 ```
 
-Note we use `metafeed` here in the info. As the top/genesis meta feed is
+Note we use `metafeed` here in the info. As the top/genesis metafeed is
 special we use that string, for all other derived feeds a nonce is used,
 which is also published in the corresponding `metafeed/add/derived`
 message.
@@ -214,11 +214,11 @@ published on the main):
 }
 ```
 
-By doing so we allow the existing feed to reconstruct the meta feed and
+By doing so we allow the existing feed to reconstruct the metafeed and
 all sub feeds from this seed.
 
-Then the meta feed is linked with the existing `main` feed using a new
-message on the meta feed signed by both the `main` feed and the meta
+Then the metafeed is linked with the existing `main` feed using a new
+message on the metafeed signed by both the `main` feed and the meta
 feed. For details this see [bendy butt].
 
 ```
@@ -226,7 +226,7 @@ feed. For details this see [bendy butt].
   "type" => "metafeed/add/existing",
   "feedpurpose" => "main",
   "subfeed" => (BFE-encoded feed ID for the 'main' feed),
-  "metafeed" => (BFE-encoded Bendy Butt feed ID for the meta feed),
+  "metafeed" => (BFE-encoded Bendy Butt feed ID for the metafeed),
   "tangles" => {
     "metafeed" => {
       "root" => (BFE nil),
@@ -237,7 +237,7 @@ feed. For details this see [bendy butt].
 ```
 
 In order for existing applications to know that the existing feed
-supports meta feeds, a special message of type `metafeed/announce`
+supports metafeeds, a special message of type `metafeed/announce`
 is created on the `main` feed (notice this is JSON, because the
  main feed is not in Bendy Butt):
 
@@ -259,32 +259,32 @@ is created on the `main` feed (notice this is JSON, because the
 }
 ```
 
-Note that MAIN_FEED_ID is the ID of the main feed, and that 
-SIGNATURE_OF_THE_ABOVE is the signature (using the meta feed 
+Note that MAIN_FEED_ID is the ID of the main feed, and that
+SIGNATURE_OF_THE_ABOVE is the signature (using the metafeed
 keys) of the stringified `content` *without* `content.signature`
-itself, in a similar manner to how the message signature 
-`msg.value.signature` is constructed relative to `msg.value`. So 
-`msg.value.signature` is signed with the `main` feed's keys, but 
-`msg.value.content.signature` is signed with the *meta feed keys*.
- 
-A feed can only have **one** meta feed. If for whatever reason an
-existing meta feed needs to be superseed, a new message is created
+itself, in a similar manner to how the message signature
+`msg.value.signature` is constructed relative to `msg.value`. So
+`msg.value.signature` is signed with the `main` feed's keys, but
+`msg.value.content.signature` is signed with the *metafeed keys*.
+
+A feed can only have **one** metafeed. If for whatever reason an
+existing metafeed needs to be superseed, a new message is created
 pointing to the previous `metafeed/announce` message via the tangle.
 
 ### New SSB identity
 
 A new identity also starts by constructing a seed. From this seed both
-the meta feed keys and the main feed keys are generated. The main
+the metafeed keys and the main feed keys are generated. The main
 should use the info: `ssb-meta-feed-seed-v1:<base64 encoded nonce>`
 and the `nonce` is also published as part of the `metafeed/add/derived`
-message on the meta feed.
+message on the metafeed.
 
 ```
 {
   "type" => "metafeed/add/derived",
   "feedpurpose" => "main",
   "subfeed" => (BFE-encoded feed ID for the 'main' feed),
-  "metafeed" => (BFE-encoded Bendy Butt feed ID for the meta feed),
+  "metafeed" => (BFE-encoded Bendy Butt feed ID for the metafeed),
   "nonce" => (bencode byte sequence with 32 random bytes),
   "tangles" => {
     "metafeed" => {
@@ -295,14 +295,14 @@ message on the meta feed.
 }
 ```
 
-The seed will also be encrypted to the main feed and the meta feed
+The seed will also be encrypted to the main feed and the metafeed
 linked to the main feed just like for existing feeds.
 
 ### Identity backwards compatibility
 
 By building a layer on top of existing feeds we maintain backwards
 compatible with existing clients. The identity to be used by new
-applications should be that of the meta feed. For backwards
+applications should be that of the metafeed. For backwards
 compatibility contact messages forming the follow graph together with
 secret handshake will continue to use the key of the main feed.
 
@@ -313,7 +313,7 @@ in the case the main key being broken or stolen, you don't loose
 everything.
 
 If a key is reused in another part of the tree it must include a
-reference to the original sub feed or meta feed it was defined in. The
+reference to the original sub feed or metafeed it was defined in. The
 original place is the authorative place for its metadata.
 
 Using [BIP32-Ed25519] instead was considered but that method has a
@@ -328,7 +328,7 @@ common examples:
 ### New feed format
 
 Changing to a new feed format could be implemented by adding a new
-feed to the meta feed state, and by adding a tombstone message to the
+feed to the metafeed state, and by adding a tombstone message to the
 old feed pointing and assigning the new feed as active in the meta
 feed.
 
@@ -388,7 +388,7 @@ only be used in limited circumstances, and if so which ones?
 
 ## Acknowledgments and prior work
 
-CFT suggested the use of meta feeds
+CFT suggested the use of metafeeds
 [in](https://github.com/arj03/ssb-observables/issues/1)
 
 [BIP32-Ed25519]: https://github.com/wallet-io/bip32-ed25519/blob/master/doc/Ed25519_BIP.pdf
