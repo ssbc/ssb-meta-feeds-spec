@@ -235,7 +235,7 @@ digits of the following hash:
 FIXME: WHICH HASH ALGORITHM?
 
 ```
-hash(concat(rootMetafeedId, hopefullyUniqueString))
+hash(concat(rootMetafeedId, name))
 ```
 
 The 1st-byte is then used to create a new 1st-byte feed, unless there is already
