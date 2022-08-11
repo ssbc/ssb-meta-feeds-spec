@@ -38,7 +38,7 @@ The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT", "SHOULD",
 "SHOULD NOT", "RECOMMENDED", "MAY", and "OPTIONAL" in this document are to be
 interpreted as described in RFC 2119.
 
-We use bencode and BFE notations as defined in the [bendy butt] spec.
+We use bencode and [BFE] notations as defined in the [bendy butt] spec.
 
 ## Usage of Bendy Butt feed format
 
@@ -227,16 +227,17 @@ application-specific subfeeds, and then you know which 1st-byte feeds to
 replicate.
 
 When adding a new application-specific subfeed to the tree, the 1st-byte is
-calculated based on a "name", which is any string that the application can
+calculated based on a "name", which is any UTF-8 string that the application can
 choose freely, but it is **RECOMMENDED** that this string be unique to the use
 case. Then, the 1st-byte is calculated by taking the first two hexadecimal
-digits of the following hash:
-
-FIXME: WHICH HASH ALGORITHM?
+digits of the following SHA256 hash:
 
 ```
-hash(concat(rootMetafeedId, name))
+sha256_hash(concat_bytes(root_metafeed_id, name))
 ```
+
+where `root_metafeed_id` is the BFE-encoded ID of the root metafeed, and
+`name` is a BFE-encoded UTF-8 string.
 
 The 1st-byte is then used to create a new 1st-byte feed, unless there is already
 one. There **MUST** be at most *one* 1st-byte feed for every unique octet. The
@@ -485,5 +486,5 @@ CFT suggested the use of metafeeds
 [ssb-secure-partial-replication]: https://github.com/ssb-ngi-pointer/ssb-secure-partial-replication
 [fusion identity]: https://github.com/ssb-ngi-pointer/fusion-identity-spec/
 [bencode]: https://en.wikipedia.org/wiki/Bencode
-[SSB-BFE]: https://github.com/ssb-ngi-pointer/ssb-binary-field-encodings
+[BFE]: https://github.com/ssbc/ssb-bfe-spec
 [bendy butt]: https://github.com/ssb-ngi-pointer/bendy-butt-spec
