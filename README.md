@@ -214,23 +214,25 @@ following `content` on the root metafeed:
 
 The feed format for `v1` **MUST** be [bendy butt], because it is a metafeed.
 
-The *direct* subfeeds of `v1` are the so-called *1st-byte feeds*. The actual
-application-specific subfeeds are under the 1st-byte feeds. The "1st byte"
-refers to 8 bits of entropy extracted from the application-specific subfeed, and
-can be represented by two hexadecimal digits.
+The *direct* subfeeds of `v1` are the so-called *shard feeds*. The actual
+application-specific subfeeds are under the shard feeds. Sharding is based on
+4 bits of entropy extracted from the application-specific subfeed, and
+can be represented by 1 hexadecimal digit. We will call that digit the "nibble".
+The nibbles are: `0`, `1`, `2`, `3`, `4`, `5`, `6`, `7`, `8`, `9`, `a`, `b`,
+`c`, `d`, `e`, `f`.
 
-The purpose of the 1st-byte feeds is to *shard* the set of application-specific
-subfeeds into 256 separate groupings of feeds, i.e. one for every octet. This
+The purpose of the shard feeds is to allocate the set of application-specific
+subfeeds into 16 separate groupings of feeds, i.e. one for each nibble. This
 way, if you are only interested in replicating a subset of the
-application-specific subfeeds, you can deterministically calculate the 1st-byte
-for those application-specific subfeeds, and then you know which 1st-byte feeds
+application-specific subfeeds, you can deterministically calculate the nibble
+for those application-specific subfeeds, and then you know which shard feeds
 to replicate.
 
-When adding a new application-specific subfeed to the tree, the 1st-byte is
-calculated based on a "name", which is any UTF-8 string that the application can
-choose freely, but it is **RECOMMENDED** that this string be unique to the use
-case. Then, the 1st-byte is calculated by taking the first two hexadecimal
-digits of the following SHA256 hash:
+When adding a new application-specific subfeed to the tree, we need to determine
+the parent shard based on a "name", which is any UTF-8 string that the
+application can choose freely, but it is **RECOMMENDED** that this string be
+unique to the use case. Then, the shard feed's nibble is calculated as the first
+hexadecimal digit of the following SHA256 hash:
 
 ```
 sha256_hash(concat_bytes(root_metafeed_id, name))
@@ -239,15 +241,15 @@ sha256_hash(concat_bytes(root_metafeed_id, name))
 where `root_metafeed_id` is the BFE-encoded ID of the root metafeed, and
 `name` is a BFE-encoded UTF-8 string.
 
-The 1st-byte is then used to create a new 1st-byte feed, unless there is already
-one. There **MUST** be at most *one* 1st-byte feed for every unique octet. The
-`content` on the root's message for the 1st-byte feed **MUST** have the
-1st byte encoded as hexadecimal in the `feedpurpose` field of the
-`metafeed/add/derived` message. The feed format for a 1st-byte feed **MUST** be
-[bendy butt], because they are metafeeds.
+The nibble is then used to create a new shard feed, unless there is already
+one. There **MUST** be at most *one* shard feed for every unique nibble. The
+`content` on the root's message for the shard feed **MUST** have the nibble
+encoded as hexadecimal in the `feedpurpose` field of the `metafeed/add/derived`
+message. The feed format for a shard feed **MUST** be [bendy butt], because
+they are metafeeds.
 
-Once the 1st-byte feed is created, the application-specific subfeeds can be
-added as subfeeds of that one, either as `metafeed/add/derived` or
+Once the shard feed is created, the application-specific subfeeds can be added
+as subfeeds of that one, either as `metafeed/add/derived` or
 `metafeed/add/existing`.
 
 The following diagram is an example of the organization of subfeeds under the v1
@@ -256,12 +258,12 @@ specification:
 ```mermaid
 graph TB;
   root --> v1
-  v1 --> 8a & 41 & cf & 32
-  8a --> main
-  41 --> gathering
-  41 --> chess
-  cf --> group1
-  32 --> group2
+  v1 --> 8 & a & c & 3
+  8 --> main
+  a --> gathering
+  a --> chess
+  c --> group1
+  3 --> group2
 ```
 
 ## Key management, identity and metadata
