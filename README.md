@@ -220,11 +220,11 @@ refers to 8 bits of entropy extracted from the application-specific subfeed, and
 can be represented by two hexadecimal digits.
 
 The purpose of the 1st-byte feeds is to *shard* the set of application-specific
-subfeeds into 256 separate groups, i.e. one for every octet. This way, if you
-are only interested in replicating a subset of the application-specific
-subfeeds, you can deterministically calculate the 1st-byte for those
-application-specific subfeeds, and then you know which 1st-byte feeds to
-replicate.
+subfeeds into 256 separate groupings of feeds, i.e. one for every octet. This
+way, if you are only interested in replicating a subset of the
+application-specific subfeeds, you can deterministically calculate the 1st-byte
+for those application-specific subfeeds, and then you know which 1st-byte feeds
+to replicate.
 
 When adding a new application-specific subfeed to the tree, the 1st-byte is
 calculated based on a "name", which is any UTF-8 string that the application can
