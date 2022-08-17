@@ -8,11 +8,11 @@ However, what is the optimal sharding ratio - one that minimizes unnecessary rep
 
 ## Definitions
 
-Let $Feeds$ be the total number of content feeds, and $Feeds'$ be the number of content feeds which the current peer is going to replicate. $Feeds' <= Feeds$.
+Let $Feeds$ be the total number of content feeds, and $Feeds'$ be the number of content feeds which the current peer is going to replicate. $Feeds' \leq Feeds$.
 
 Let $Shards$ be the number of shard feeds, and $Shards'$ the number of shard feeds the current peer is going to replicate.
 
-$Replicating$ refers to the number of feeds (either content feeds or metafeeds) in the tree that are replicated. 
+$Replicating$ refers to the number of feeds (either content feeds or metafeeds) in the tree that are replicated.
 
 $Overhead$ is the total number of metafeed messages replicated. It includes messages from the root metafeed and from the shard metafeeds. Does not include messages from content feeds.
 
@@ -48,17 +48,17 @@ graph TB;
   root-->A-->1 & 2
   root-->B-->3 & 4
   root-->C-->5 & 6
-  
+
   root:::repl
   A:::repl
   B:::repl
   1:::repl
   2:::repl
   4:::repl
-  
+
   classDef repl fill:#9f9,stroke:#090;
   classDef default fill:#eee,stroke:#999,color:#999;
-  
+
   linkStyle 7 opacity:0.2;
   linkStyle 8 opacity:0.2;
 ```
@@ -75,13 +75,13 @@ graph TB;
 ```mermaid
 graph TB;
   root-->A-->1 & 2 & 3 & 4 & 5 & 6
-  
+
   root:::repl
   A:::repl
   1:::repl
   2:::repl
   4:::repl
-  
+
   classDef repl fill:#9f9,stroke:#090;
   classDef default fill:#eee,stroke:#999,color:#999;
 ```
@@ -114,7 +114,7 @@ graph TB;
   root-->D-->4
   root-->E-->5
   root-->F-->6
-  
+
   root:::repl
   A:::repl
   B:::repl
@@ -122,10 +122,10 @@ graph TB;
   1:::repl
   2:::repl
   4:::repl
-  
+
   classDef repl fill:#9f9,stroke:#090;
   classDef default fill:#eee,stroke:#999,color:#999;
-  
+
   linkStyle 5 opacity:0.2;
   linkStyle 9 opacity:0.2;
   linkStyle 11 opacity:0.2;
@@ -386,7 +386,7 @@ This means:
 | $Feeds=128$ | $Feeds'=32$ | $Shards=16$ |
 | --------- | --------- | --------- |
 
-Assume Staltz has dozens of apps, and up to a hundred private groups. So lets set his $Feeds$ at 128, as a convenient power of two. 
+Assume Staltz has dozens of apps, and up to a hundred private groups. So lets set his $Feeds$ at 128, as a convenient power of two.
 
 Mix wants to replicate some subset of those (he only uses a couple of apps, and isn't in the same groups as Staltz) - set $Feeds'$ at 32.
 
@@ -446,7 +446,7 @@ for (let s = 1; s <= shards; s++) {
 ```
 </details>
 
-  
+
 So, about 8 of our shards need replicating (half in this case).
 Which means our Total Awareness is at about 50%, which seems great!
 
@@ -463,7 +463,7 @@ If each app is a clump of 2 feeds on average, we need to replicate 10/16 shards 
 
 It's important to minimize both $Replicating$ and $Overhead$. But $Overhead$ is directly proportional to $Awareness$, which means we must minimize $Awareness$. We know that $Awareness$ is at its lowest when $Shards$ is at its highest, but $Overhead$ is also directly proportional to $Shards$, so we must minimize $Shards$ too.
 
-Maybe we should aim for $Feeds' < Shards < Feeds$ as a general rule? 
+Maybe we should aim for $Feeds' < Shards < Feeds$ as a general rule?
 
 $Shards = 1 < Feeds' < Feeds$ is **min sharding** where the overhead is O(M) which is pretty bad. The "realistic case $Shards=8$" is not min sharding, but it is quite close to min sharding because $Shards < Feeds' < Feeds$, and overhead is pretty bad.
 

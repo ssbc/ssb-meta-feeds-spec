@@ -221,7 +221,7 @@ can be represented by 1 hexadecimal digit. We will call that digit the "nibble".
 The nibbles are: `0`, `1`, `2`, `3`, `4`, `5`, `6`, `7`, `8`, `9`, `a`, `b`,
 `c`, `d`, `e`, `f`. The number of shards is specifically set at 16 to allow for
 efficient partial replication in realistic scenarios. See
-[sharding math](./sharding-math.pdf) for mathematical details on the choice of
+[sharding math](./sharding-math.md) for mathematical details on the choice of
 number of shards.
 
 The purpose of the shard feeds is to allocate the set of application-specific
