@@ -262,12 +262,16 @@ specification:
 graph TB;
   root --> v1
   v1 --> 8 & a & c & 3
-  8 --> main
+  8 --> post
   a --> gathering
   a --> chess
-  c --> group1
-  3 --> group2
+  c --> vote
+  3 --> contact
 ```
+
+It is **RECOMMENDED** that the application-specific subfeeds are leafs in the
+tree, but they **MAY** be metafeeds that contain other application-specific
+subfeeds.
 
 ## Key management, identity and metadata
 
