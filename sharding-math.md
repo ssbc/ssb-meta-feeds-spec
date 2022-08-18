@@ -139,7 +139,7 @@ In the general case, max sharding has:
 
 | Formula | Conclusion |
 |--|--|
-| $Replicating = 2×Feeds + 1$ | :grimacing: |
+| $Replicating = 2×Feeds' + 1$ | :grimacing: |
 | $Awareness = Feeds'$ | :slightly_smiling_face: |
 | $Overhead = Feeds + Feeds'$ | :grimacing: |
 
@@ -170,10 +170,6 @@ $$
 $$
 
 This means an **even distribution of feeds across shards** is highly likely to cause $Awareness = Feeds$, which leads to a large $Overhead$.
-
-## Scenario: $Shards > Feeds'$
-
-?
 
 ## Realistic case with 16 shards (4-bit)
 
@@ -211,175 +207,29 @@ This means:
 |--|--|--|-|
 | $Replicating \leq$ | $32 + 32 + 1 =$ | $65$ | :slightly_smiling_face: |
 | $Awareness \leq$ | $Shards' × \alpha =$ | $64$ | :slightly_smiling_face: |
-| $Overhead \leq$ | $Shards + 64 =$ | $128$ | :neutral_face: |
-
-## Realistic case with 32 shards (5-bit)
-
-| $Feeds=512$ | $Feeds'=64$ | $Shards=32$ |
-|-|-|-|
-
-$\alpha = 16$
-
-$\alpha' = 2$
-
-$Shards'  \approx  Shards$
-
-This means:
-
-| Formula |  |  | Conclusion |
-|--|--|--|-|
-| $Replicating \approx$ | $64 + 32 + 1 =$ | $97$ | :slightly_smiling_face: |
-| $Awareness \approx$ | $Shards'×\alpha =$ | $512$ | :grimacing: |
-| $Overhead \approx$ | $Shards + 512 =$ | $544$ | :grimacing: |
-
-## Realistic case with 64 shards (6-bit)
-
-| $Feeds=512$ | $Feeds'=64$ | $Shards=64$ |
-|-|-|-|
-
-$\alpha = 8$
-
-$\alpha' = 1$
-
-$Shards' \leq Shards$
-
-This means:
-
-| Formula |  |  | Conclusion |
-|--|--|--|-|
-| $Replicating \leq$ | $64 + 64 + 1 =$ | $129$ | :slightly_smiling_face: |
-| $Awareness \approx$ | $64×\alpha =$ | $64$ | :slightly_smiling_face: |
-| $Overhead \leq$ | $Shards + 64 =$ | $128$ | :slightly_smiling_face: |
-
-
-
-## Realistic case with 128 shards (7-bit)
-
-| $Feeds=512$ | $Feeds'=64$ | $Shards=128$ |
-|-|-|-|
-
-$\alpha = 4$
-
-$\alpha' = 0.5$
-
-$Shards' \leq 0.5×128 = 64$
-
-This means:
-
-| Formula |  |  | Conclusion |
-|--|--|--|-|
-| $Replicating \leq$ | $64 + 64 + 1 =$ | $129$ | :slightly_smiling_face: |
-| $Awareness \leq$ | $Shards'×\alpha =$ | $256$ | :slightly_smiling_face: |
-| $Overhead \leq$ | $Shards + 256 =$ | $384$ | :neutral_face: |
+| $Overhead \leq$ | $Shards + 64 =$ | $128$ | :grimacing: |
 
 ## Realistic case with 256 shards (8-bit)
 
-| $Feeds=512$ | $Feeds'=64$ | $Shards=256$ |
+| $Feeds=128$ | $Feeds'=32$ | $Shards=256$ |
 |-|-|-|
 
-$\alpha = 2$
+In this case there are more shards than content feeds, so this most likely means
+that max sharding occurs.
+
+$\alpha = 1$
 
 $\alpha' = 0.25$
 
-$Shards' \leq \alpha'×Shards = 0.25×256 = 64$
+$Shards' = Feeds' = 32$
 
 This means:
 
 | Formula |  |  | Conclusion |
 |--|--|--|-|
-| $Replicating \leq$ | 64 + 64 + 1 =$ | $129$ | :slightly_smiling_face: |
-| $Awareness \leq$ | $Shards'×\alpha =$ | $128$ | :slightly_smiling_face: |
-| $Overhead \leq$ | $Shards + 128 =$ | $384$ | :neutral_face: |
-
-
-## Realistic case with 48 shards
-
-| Feeds=128 | Chosen=32 | Shards=48 |
-|-|-|-|
-
-2.666 feeds in each shard. Sometimes empty shards.
-
-0.666 chosen feeds in each shard. We only replicate approximately 32 shards.
-
-This means:
-
-| Attribute | Formula |  |
-|--|--|--|
-| Replicating | Chosen + 32 + 1 = 65 | :neutral_face: |
-| Overhead | Shards + 2.666×32 = 131 | :grimacing: |
-| Awareness | 2.666×32 = 85 | :neutral_face: |
-
-
-## Realistic case with 8 shards (3-bit)
-
-| M=512 | N=64 | S=8 |
-|-------|------|-----|
-
-It's reasonable to assume there are dozens of apps and hundreds of private groups. Let's set M at 512, just to have a power of two. Let's see N at 64, which means a few apps and a couple groups.
-
-Because we have 8 shards and 512 feeds, there are on average 64 feeds in each shard (assuming random shard allocation).
-
-Because we have 64 feeds-to-replicate and 8 shards, there are on average 8 feeds-to-replicate in each shard, and we use all 8 shards.
-
-This means:
-
-| Attribute | Formula |  |
-|--|--|--|
-| Replicating | N+S+1 = 73 | :slightly_smiling_face: |
-| Overhead | M+S = 520 | :grimacing: :fire: |
-| Awareness | M = 512 | :grimacing: |
-
-## Realistic case with 16 shards (4-bit)
-
-| M=512 | N=64 | S=16 |
-|-------|------|------|
-
-There are on average 32 feeds in each shard (assuming random shard allocation).
-
-There are on average 4 feeds-to-replicate in each shard, and we *probably* use all 16 shards.
-
-This means:
-
-| Attribute | Formula |  |
-|--|--|--|
-| Replicating | N+S+1 = 81 | :slightly_smiling_face: |
-| Overhead | M+S ~= 528 | :grimacing: :fire: |
-| Awareness | M ~= 512 | :grimacing: |
-
-## Realistic case with 256 shards (8-bit)
-
-| M=512 | N=64 | S=256 |
-|-------|------|-------|
-
-There are on average 2 feeds in each shard (assuming random shard allocation). It's reasonable to assume that in some shards there will be 1 feed, while in other shards there will be **zero feeds**.
-
-There are on average 0.25 feeds-to-replicate in each shard, so it's reasonable to assume that the number of shards we will replicate is S' = `0.25*256 = 64`
-
-This means:
-
-| Attribute | Formula |  |
-|--|--|--|
-| Replicating | N+S'+1 = 129 | :neutral_face: |
-| Overhead | S+2S' ~= 192 | :neutral_face: |
-| Awareness | 2S' = 128 | :slightly_smiling_face: |
-
-## Realistic case with 64 shards (6-bit)
-
-| M=512 | N=64 | S=64 |
-|-------|------|------|
-
-There are on average 8 feeds in each shard (assuming random shard allocation).
-
-There are on average 1 feeds-to-replicate in each shard, and it's reasonable to assume that *sometimes* a shard has 2 feeds-to-replicate and sometimes a shard has none. So the number of shards we will replicate is S' < S. Let's guess S' = 58.
-
-This means:
-
-| Attribute | Formula |  |
-|--|--|--|
-| Replicating | N+S'+1 = 123 | :neutral_face: |
-| Overhead | S+S' ~= 122 | :neutral_face: |
-| Awareness | S' ~= 58 | :slightly_smiling_face: |
-
+| $Replicating =$ | $32 + 32 + 1 =$ | $65$ | :slightly_smiling_face: |
+| $Awareness =$ | $Feeds' =$ | $32$ | :slightly_smiling_face: |
+| $Overhead =$ | $Feeds + Feeds' =$ | $160$ | :grimacing: |
 
 ## Realistic Case: clumping
 
