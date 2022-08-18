@@ -34,7 +34,7 @@ $Overhead = Shards + Awareness$.
 
 The other type of metafeed that we replicate are shard feeds. By definition, $Awareness$ is the number of content feeds under the shard feeds that we're replicating. Since shard feeds only announce the existence of content feeds, the number of messages in a shard correspond to the number of content feeds under that shard.
 
-Overhead are the total number of metafeed messages, thus metafeed messages from the root ($Shards$) plus metafeed messages from all shards ($Awareness$). ∎
+Overhead are the total number of metafeed messages, thus metafeed messages from the root ( $Shards$ ) plus metafeed messages from all shards ( $Awareness$ ). ∎
 
 ## Case studies
 
