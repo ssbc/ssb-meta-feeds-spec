@@ -38,7 +38,7 @@ The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT", "SHOULD",
 "SHOULD NOT", "RECOMMENDED", "MAY", and "OPTIONAL" in this document are to be
 interpreted as described in RFC 2119.
 
-We use bencode and BFE notations as defined in the [bendy butt] spec.
+We use bencode and [BFE] notations as defined in the [bendy butt] spec.
 
 ## Usage of Bendy Butt feed format
 
@@ -172,6 +172,106 @@ digraph Applications {
   (other fields...)
 }
 ```
+
+## Tree structure
+
+Since a subfeed can be a metafeed itself, this means that the relationships
+between subfeeds and metafeeds is a tree. We refer to the top-most metafeed as
+the "root" metafeed.
+
+While a metafeed **MAY** contain any arbitrary subfeed, we prescribe a
+**RECOMMENDED** structure for the tree.
+
+Under the root metafeed, there **SHOULD** be only one *type* of subfeed:
+*versioning subfeeds*. For now, there **SHOULD** be only subfeed `v1`, but in
+the future, this spec will be extended to describe subfeed `v2` once it is time
+to deprecate `v1`.
+
+The subfeeds at the leafs of the tree contain actual content. Once there is a
+new versioning subfeed, the leaf feeds can be transferred under the new
+versioning subfeed via `metafeed/add/existing` messages, without having to
+recreate the leaf feeds. Thus, the tree structure is only concerned with the
+*organization* of feeds in order to assist partial replication. For example,
+by grouping together feeds that are part of the same application under a common
+metafeed, we can skip replication of those application feeds if they are not
+relevant to the user.
+
+### v1
+
+This section describes the specification of the organization of subfeeds under
+the `v1` versioning subfeed.
+
+To start with, the `v1` versioning subfeed **MUST** be created with the
+following `content` on the root metafeed:
+
+```
+{
+  "type" => "metafeed/add/derived",
+  "feedpurpose" => "v1",
+  "subfeed" => (BFE-encoded feed ID dedicated for the versioning subfeed),
+}
+```
+
+The feed format for `v1` **MUST** be [bendy butt], because it is a metafeed.
+
+The *direct* subfeeds of `v1` are the so-called *shard feeds*. The actual
+application-specific subfeeds are under the shard feeds. Sharding is based on
+4 bits of entropy extracted from the application-specific subfeed, and
+can be represented by 1 hexadecimal digit. We will call that digit the "nibble".
+The nibbles are: `0`, `1`, `2`, `3`, `4`, `5`, `6`, `7`, `8`, `9`, `a`, `b`,
+`c`, `d`, `e`, `f`. The number of shards is specifically set at 16 to allow for
+efficient partial replication in realistic scenarios. See
+[sharding math](./sharding-math.md) for mathematical details on the choice of
+number of shards.
+
+The purpose of the shard feeds is to allocate the set of application-specific
+subfeeds into 16 separate groupings of feeds, i.e. one for each nibble. This
+way, if you are only interested in replicating a subset of the
+application-specific subfeeds, you can deterministically calculate the nibble
+for those application-specific subfeeds, and then you know which shard feeds
+to replicate.
+
+When adding a new application-specific subfeed to the tree, we need to determine
+the parent shard based on a "name", which is any UTF-8 string that the
+application can choose freely, but it is **RECOMMENDED** that this string be
+unique to the use case. Then, the shard feed's nibble is calculated as the first
+hexadecimal digit of the following SHA256 hash:
+
+```
+sha256_hash(concat_bytes(root_metafeed_id, name))
+```
+
+where `root_metafeed_id` is the BFE-encoded ID of the root metafeed, and
+`name` is a BFE-encoded UTF-8 string.
+
+The nibble is then used to create a new shard feed, unless there is already
+one. There **MUST** be at most *one* shard feed for every unique nibble. The
+`content` on the root's message for the shard feed **MUST** have the nibble
+encoded as hexadecimal in the `feedpurpose` field of the `metafeed/add/derived`
+message. The feed format for a shard feed **MUST** be [bendy butt], because
+they are metafeeds.
+
+Once the shard feed is created, the application-specific subfeeds can be added
+as subfeeds of that one, either as `metafeed/add/derived` or
+`metafeed/add/existing`.
+
+The following diagram is an example of the organization of subfeeds under the v1
+specification:
+
+```mermaid
+graph TB;
+  root --> v1
+  v1 --> 8 & a & c & 3
+  8 --> post
+  a --> gathering
+  a --> chess
+  c --> vote
+  3 --> contact
+```
+
+It is **RECOMMENDED** that the application-specific subfeeds are leafs in the
+tree, but they **MAY** be metafeeds that contain other application-specific
+subfeeds.
 
 ## Key management, identity and metadata
 
@@ -395,5 +495,5 @@ CFT suggested the use of metafeeds
 [ssb-secure-partial-replication]: https://github.com/ssb-ngi-pointer/ssb-secure-partial-replication
 [fusion identity]: https://github.com/ssb-ngi-pointer/fusion-identity-spec/
 [bencode]: https://en.wikipedia.org/wiki/Bencode
-[SSB-BFE]: https://github.com/ssb-ngi-pointer/ssb-binary-field-encodings
+[BFE]: https://github.com/ssbc/ssb-bfe-spec
 [bendy butt]: https://github.com/ssb-ngi-pointer/bendy-butt-spec
