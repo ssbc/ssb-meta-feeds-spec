@@ -231,6 +231,8 @@ application-specific subfeeds, you can deterministically calculate the nibble
 for those application-specific subfeeds, and then you know which shard feeds
 to replicate.
 
+
+
 When adding a new application-specific subfeed to the tree, we need to determine
 the parent shard based on a "name", which is any UTF-8 string that the
 application can choose freely, but it is **RECOMMENDED** that this string be
@@ -245,11 +247,11 @@ where `root_metafeed_id` is the BFE-encoded ID of the root metafeed, and
 `name` is a BFE-encoded UTF-8 string.
 
 The nibble is then used to create a new shard feed, unless there is already
-one. There **MUST** be at most *one* shard feed for every unique nibble. The
-`content` on the root's message for the shard feed **MUST** have the nibble
-encoded as hexadecimal in the `feedpurpose` field of the `metafeed/add/derived`
-message. The feed format for a shard feed **MUST** be [bendy butt], because
-they are metafeeds.
+one. There **MUST** be at most *one* shard feed for every unique nibble. The 
+`content` on the root's message for the shard feed **MUST** have the nibble 
+expressed in hexadecimal and encoded as a string in the `feedpurpose` field 
+of the `metafeed/add/derived` message. The feed format for a shard feed 
+**MUST** be [bendy butt], because they are metafeeds.
 
 Once the shard feed is created, the application-specific subfeeds can be added
 as subfeeds of that one, either as `metafeed/add/derived` or
