@@ -271,9 +271,8 @@ graph TB;
   3 --> contact
 ```
 
-It is **RECOMMENDED** that the application-specific subfeeds are leafs in the
-tree, but they **MAY** be metafeeds that contain other application-specific
-subfeeds.
+Application-specific subfeeds are leafs in the tree, and they **MUST NOT** be 
+metafeeds that contain other application-specific subfeeds.
 
 ## Key management, identity and metadata
 
