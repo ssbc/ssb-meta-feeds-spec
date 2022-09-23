@@ -272,7 +272,10 @@ graph TB;
 ```
 
 Application-specific subfeeds are leafs in the tree, and they **MUST NOT** be 
-metafeeds that contain other application-specific subfeeds.
+metafeeds that contain other application-specific subfeeds. This restriction
+can vastly simplify implementations, and we don't see a clear need for doing
+otherwise. If the need arises, we can allow such cases in the next versions
+for the tree structure.
 
 ## Key management, identity and metadata
 
