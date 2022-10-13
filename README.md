@@ -83,15 +83,18 @@ Example of adding an existing feed:
 
 Here the application specific metadata `feedpurpose` is used.
 
-## Key management, identity and metadata
+## Key management
 
-As mentioned earlier, in classical SSB the feed identity is the same
-as the feed. Here instead we want to decouple identity and feeds.
+This sections covers how to handle the keys used when working with
+metafeeds.
 
 ### Existing SSB identity
 
-To generate a metafeed and link it to an existing `main` feed, first
-a seed is generated:
+This section is only relevant for migrating from a classic SSB feed to
+metafeeds.
+
+To create a metafeed and link it to an existing `main` feed, first a
+seed is generated:
 
 ```js
 const seed = crypto.randomBytes(32)
@@ -107,14 +110,14 @@ const mf_seed = hkdf.expand(hash, hash_len, prk, length, mf_info)
 const mf_key = ssbKeys.generate("ed25519", mf_seed)
 ```
 
-Note we use `metafeed` here in the info. As the top/genesis metafeed is
-special we use that string, for all other derived feeds a nonce is used,
-which is also published in the corresponding `metafeed/add/derived`
-message.
+Note we use `metafeed` here in the info. As the top/genesis metafeed
+is special we use that string, for all other derived feeds a nonce is
+used, which is also published in the corresponding
+`metafeed/add/derived` message.
 
-We also encrypt the seed as a private message from `main` to `main` (so
-it's a private message to yourself; notice this is JSON, because it's
-published on the main):
+We also encrypt the seed as a private message from `main` to `main`
+(so it's a private message to yourself; notice this is JSON, because
+it's published on the main):
 
 ```
 {
@@ -147,9 +150,9 @@ feed. For details this see [bendy butt].
 ```
 
 In order for existing applications to know that the existing feed
-supports metafeeds, a special message of type `metafeed/announce`
-is created on the `main` feed (notice this is JSON, because the
- main feed is not in Bendy Butt):
+supports metafeeds, a special message of type `metafeed/announce` is
+created on the `main` feed (notice this is JSON, because the main feed
+is not in Bendy Butt):
 
 ```js
 {
@@ -170,43 +173,27 @@ is created on the `main` feed (notice this is JSON, because the
 ```
 
 Note that MAIN_FEED_ID is the ID of the main feed, and that
-SIGNATURE_OF_THE_ABOVE is the signature (using the metafeed
-keys) of the stringified `content` *without* `content.signature`
-itself, in a similar manner to how the message signature
-`msg.value.signature` is constructed relative to `msg.value`. So
-`msg.value.signature` is signed with the `main` feed's keys, but
-`msg.value.content.signature` is signed with the *metafeed keys*.
+SIGNATURE_OF_THE_ABOVE is the signature (using the metafeed keys) of
+the stringified `content` *without* `content.signature` itself, in a
+similar manner to how the message signature `msg.value.signature` is
+constructed relative to `msg.value`. So `msg.value.signature` is
+signed with the `main` feed's keys, but `msg.value.content.signature`
+is signed with the *metafeed keys*.
 
 A feed can only have **one** metafeed. If for whatever reason an
 existing metafeed needs to be superseed, a new message is created
 pointing to the previous `metafeed/announce` message via the tangle.
 
-### New SSB identity
+### New metafeed
 
-A new identity also starts by constructing a seed. From this seed both
-the metafeed keys and the main feed keys are generated. The main
-should use the info: `ssb-meta-feed-seed-v1:<base64 encoded nonce>`
-and the `nonce` is also published as part of the `metafeed/add/derived`
-message on the metafeed.
+A new client without an existing classic SSB feed can start from this
+section.
 
-```
-{
-  "type" => "metafeed/add/derived",
-  "feedpurpose" => "main",
-  "subfeed" => (BFE-encoded feed ID for the 'main' feed),
-  "metafeed" => (BFE-encoded Bendy Butt feed ID for the metafeed),
-  "nonce" => (bencode byte sequence with 32 random bytes),
-  "tangles" => {
-    "metafeed" => {
-      "root" => null,
-      "previous" => null
-    }
-  }
-}
-```
+A new identity starts by constructing a seed. From this seed the
+metafeed keys can be created as described in the existing SSB identity
+section above.
 
-The seed will also be encrypted to the main feed and the metafeed
-linked to the main feed just like for existing feeds.
+The seed should be safely backed up.
 
 ## Usage of Bendy Butt feed format
 
