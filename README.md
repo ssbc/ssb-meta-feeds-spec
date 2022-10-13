@@ -28,61 +28,43 @@ on a single device. There is a separate [fusion identity] protocol
 that only deals with how to relate multiple devices to a single
 identity. This spec here is not for that use-case.
 
-Metafeeds will use a specialized feed format known as [bendy butt] that aims
-to be very easy to implement. The aim is that this will make it easier for
-implementations which do not need or want to support the classical SSB format.
+To understand how a classic SSB implementation can be migrated to
+support metafeeds see the [migration spec].
+
+Metafeeds will use a specialized feed format known as [bendy butt]
+that aims to be very easy to implement. The aim is that this will make
+it easier for implementations which do not need or want to support the
+classical SSB format.
 
 ## Definitions
 
-The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT", "SHOULD",
-"SHOULD NOT", "RECOMMENDED", "MAY", and "OPTIONAL" in this document are to be
-interpreted as described in RFC 2119.
+The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT",
+"SHOULD", "SHOULD NOT", "RECOMMENDED", "MAY", and "OPTIONAL" in this
+document are to be interpreted as described in RFC 2119.
 
-We use bencode and [BFE] notations as defined in the [bendy butt] spec.
+We use bencode and [BFE] notations as defined in the [bendy butt]
+spec.
 
-## Usage of Bendy Butt feed format
+## Overview
 
-Metafeeds **MUST** use the [bendy butt] feed format with a few additional
-constraints.
+The metafeed of a device consist of 1 root metafeed. This metafeed can
+reference other feeds by adding messages to this feed. There are only
+4 message types or operations:
 
-The `content` dictionary inside the `contentSection` of meta feed messages
-**MUST** conform to the following rules:
+ - add existing feed
+ - add new feed
+ - update metadata of a feed
+ - tombstone a feed
 
- - Has a `type` field mapping to a BFE string (i.e. `<06 00> + data`) which
- can assume only one the following possible values:
-   - `metafeed/add/existing`
-   - `metafeed/add/derived`
-   - `metafeed/update`
-   - `metafeed/tombstone`
- - Has a `subfeed` field mapping to a BFE "feed ID", i.e. `<00> + format + data`
- - Has a `metafeed` field mapping to a BFE "Bendy Butt feed ID", i.e.
- `<00 03> + data`
- - (Only if the `type` is `metafeed/add/derived`): a `nonce` field mapping
-to a BFE "arbitrary bytes" with size 32, i.e. `<06 03> + nonce32bytes`
+From these operations a number of active feeds are defined together
+with their metadata. By adding other metafeeds, a tree structure can
+be defined. A feed MUST only exist in one place within this structure.
 
-The `contentSignature` field inside a decrypted `contentSection` **MUST** use
-the `subfeed`'s cryptographic keypair.
+As defined in the usage of Bendy Butt feed format section, there are a
+number of specific fields that must be defined. Any other fields on a
+message are considered metadata. 
 
-## Example of a metafeed
-
-Here is an an example of a metafeed with 2 subfeeds: one for `main`
-social data and another one for `application-x` in a different format.
-
-![Diagram](./metafeed-example1.svg)
-<details>
-digraph metafeed {
-
-  rankdir=RL
-  node [shape=record];
-
-  edge [tailclip=false];
-  a [label="{ <ref> | <data> main }"]
-  b [label="{ <ref> | <data> application-x }"];
-  b:ref:a -> a:data [arrowhead=vee, arrowtail=dot, dir=both];
-}
-</details>
-
-Contents of messages in the metafeed that acts as metadata for feeds:
+Example of adding an existing feed:
 
 ```
 {
@@ -96,186 +78,10 @@ Contents of messages in the metafeed that acts as metadata for feeds:
       "previous" => null
     }
   },
-},
-{
-  "type" => "metafeed/add/existing",
-  "feedpurpose" => "application-x",
-  "subfeed" => (BFE-encoded Bamboo feed ID),
-  "metafeed" => (BFE-encoded Bendy Butt feed ID for the metafeed),
 }
 ```
 
-Initially the metafeed spec supports three operations: `add/existing`
-`add/derived`, and `tombstone`. **Note**, signatures (see key
-management section) are left out in the examples here.
-
-Tombstoning means that the feed is no longer part of the metafeed.
-Whether or not the subfeed itself is tombstoned is a separate
-concern.
-
-Example tombstone message:
-
-```
-{
-  "type" => "metafeed/tombstone",
-  "subfeed" => (BFE-encoded Bamboo feed ID),
-  "metafeed" => (BFE-encoded Bendy Butt feed ID for the metafeed),
-  "reason" => (some BFE string),
-  "tangles" => {
-    "metafeed" => {
-      "root" => (BFE-encoded message ID of the "metafeed/add" message),
-      "previous" => (BFE-encoded message ID of the "metafeed/add" message),
-    }
-  }
-}
-```
-
-Updating the metadata on a subfeed which is a member of a metafeed
-is currently not supported.
-
-**Note**: while the `metafeed: ...` field on the add and tombstone messages
-seems redundant, it is important to have it and check that the `metafeed` field
-equals the author of the metafeed itself to protect against replay attacks.
-
-## Applications example
-
-An example of the applications metafeed with two different
-applications.
-
-![Diagram2](./metafeed-example2.svg)
-<details>
-digraph Applications {
-
-  rankdir=RL
-  nodesep=0.6
-  node [shape=record];
-
-  edge [tailclip=false];
-  a [label="{ <ref> | <data> App1 }"]
-  b [label="{ <ref> | <data> App2 }"];
-
-  b:ref:a -> a:data [arrowhead=vee, arrowtail=dot, dir=both];
-}
-</details>
-
-```
-{
-  "type" => "metafeed/add/derived",
-  "feedpurpose" => "gathering",
-  "subfeed" => (BFE-encoded feed ID dedicated for the gathering app),
-  (other fields...)
-},
-{
-  "type" => "metafeed/add/derived",
-  "feedpurpose" => "chess"
-  "subfeed" => (BFE-encoded feed ID dedicated for the chess app),
-  (other fields...)
-}
-```
-
-## Tree structure
-
-Since a subfeed can be a metafeed itself, this means that the relationships
-between subfeeds and metafeeds is a tree. We refer to the top-most metafeed as
-the "root" metafeed.
-
-While a metafeed **MAY** contain any arbitrary subfeed, we prescribe a
-**RECOMMENDED** structure for the tree.
-
-Under the root metafeed, there **SHOULD** be only one *type* of subfeed:
-*versioning subfeeds*. For now, there **SHOULD** be only subfeed `v1`, but in
-the future, this spec will be extended to describe subfeed `v2` once it is time
-to deprecate `v1`.
-
-The subfeeds at the leafs of the tree contain actual content. Once there is a
-new versioning subfeed, the leaf feeds can be transferred under the new
-versioning subfeed via `metafeed/add/existing` messages, without having to
-recreate the leaf feeds. Thus, the tree structure is only concerned with the
-*organization* of feeds in order to assist partial replication. For example,
-by grouping together feeds that are part of the same application under a common
-metafeed, we can skip replication of those application feeds if they are not
-relevant to the user.
-
-### v1
-
-This section describes the specification of the organization of subfeeds under
-the `v1` versioning subfeed.
-
-To start with, the `v1` versioning subfeed **MUST** be created with the
-following `content` on the root metafeed:
-
-```
-{
-  "type" => "metafeed/add/derived",
-  "feedpurpose" => "v1",
-  "subfeed" => (BFE-encoded feed ID dedicated for the versioning subfeed),
-}
-```
-
-The feed format for `v1` **MUST** be [bendy butt], because it is a metafeed.
-
-The *direct* subfeeds of `v1` are the so-called *shard feeds*. The actual
-application-specific subfeeds are under the shard feeds. Sharding is based on
-4 bits of entropy extracted from the application-specific subfeed, and
-can be represented by 1 hexadecimal digit. We will call that digit the "nibble".
-The nibbles are: `0`, `1`, `2`, `3`, `4`, `5`, `6`, `7`, `8`, `9`, `a`, `b`,
-`c`, `d`, `e`, `f`. The number of shards is specifically set at 16 to allow for
-efficient partial replication in realistic scenarios. See
-[sharding math](./sharding-math.md) for mathematical details on the choice of
-number of shards.
-
-The purpose of the shard feeds is to allocate the set of application-specific
-subfeeds into 16 separate groupings of feeds, i.e. one for each nibble. This
-way, if you are only interested in replicating a subset of the
-application-specific subfeeds, you can deterministically calculate the nibble
-for those application-specific subfeeds, and then you know which shard feeds
-to replicate.
-
-
-
-When adding a new application-specific subfeed to the tree, we need to determine
-the parent shard based on a "name", which is any UTF-8 string that the
-application can choose freely, but it is **RECOMMENDED** that this string be
-unique to the use case. Then, the shard feed's nibble is calculated as the first
-hexadecimal digit of the following SHA256 hash:
-
-```
-sha256_hash(concat_bytes(root_metafeed_id, name))
-```
-
-where `root_metafeed_id` is the BFE-encoded ID of the root metafeed, and
-`name` is a BFE-encoded UTF-8 string.
-
-The nibble is then used to create a new shard feed, unless there is already
-one. There **MUST** be at most *one* shard feed for every unique nibble. The 
-`content` on the root's message for the shard feed **MUST** have the nibble 
-expressed in hexadecimal and encoded as a string in the `feedpurpose` field 
-of the `metafeed/add/derived` message. The feed format for a shard feed 
-**MUST** be [bendy butt], because they are metafeeds.
-
-Once the shard feed is created, the application-specific subfeeds can be added
-as subfeeds of that one, either as `metafeed/add/derived` or
-`metafeed/add/existing`.
-
-The following diagram is an example of the organization of subfeeds under the v1
-specification:
-
-```mermaid
-graph TB;
-  root --> v1
-  v1 --> 8 & a & c & 3
-  8 --> post
-  a --> gathering
-  a --> chess
-  c --> vote
-  3 --> contact
-```
-
-Application-specific subfeeds are leafs in the tree, and they **MUST NOT** be 
-metafeeds that contain other application-specific subfeeds. This restriction
-can vastly simplify implementations, and we don't see a clear need for doing
-otherwise. If the need arises, we can allow such cases in the next versions
-for the tree structure.
+Here the application specific metadata `feedpurpose` is used.
 
 ## Key management, identity and metadata
 
@@ -402,27 +208,30 @@ message on the metafeed.
 The seed will also be encrypted to the main feed and the metafeed
 linked to the main feed just like for existing feeds.
 
-### Identity backwards compatibility
+## Usage of Bendy Butt feed format
 
-By building a layer on top of existing feeds we maintain backwards
-compatible with existing clients. The identity to be used by new
-applications should be that of the metafeed. For backwards
-compatibility contact messages forming the follow graph together with
-secret handshake will continue to use the key of the main feed.
+Metafeeds **MUST** use the [bendy butt] feed format with a few
+additional constraints.
 
-It is worth noting that even though the examples above specify ways to
-generate new feeds from a single seed, it is perfectly fine and in
-some cases a better idea to generate a feed not from this seed. Thus
-in the case the main key being broken or stolen, you don't loose
-everything.
+The `content` dictionary inside the `contentSection` of meta feed
+messages **MUST** conform to the following rules:
 
-If a key is reused in another part of the tree it must include a
-reference to the original subfeed or metafeed it was defined in. The
-original place is the authorative place for its metadata.
+ - Has a `type` field mapping to a BFE string (i.e. `<06 00> + data`)
+ which can assume only one the following possible values:
+   - `metafeed/add/existing`
+   - `metafeed/add/derived`
+   - `metafeed/update`
+   - `metafeed/tombstone`
+ - Has a `subfeed` field mapping to a BFE "feed ID", i.e. `<00> +
+   format + data`
+ - Has a `metafeed` field mapping to a BFE "Bendy Butt feed ID", i.e.
+ `<00 03> + data`
+ - (Only if the `type` is `metafeed/add/derived`): a `nonce` field
+   mapping to a BFE "arbitrary bytes" with size 32, i.e. `<06 03> +
+   nonce32bytes`
 
-Using [BIP32-Ed25519] instead was considered but that method has a
-weaker security model in the case of a key compromised where keys are
-shared between devices.
+The `contentSignature` field inside a decrypted `contentSection`
+**MUST** use the `subfeed`'s cryptographic keypair.
 
 ## Use cases
 
@@ -482,22 +291,13 @@ honest peers would give piece of mind that the data is only stored on
 a certain subset of the whole network. This can naturally be combined
 with private groups to better ensure safety.
 
-## Open questions
-
-- In the case of claims, how are bad actors handled?
-- What are the broader consequences of ephemeral feeds. Maybe they can
-only be used in limited circumstances, and if so which ones?
-- For subfeeds and feed rotation what is the best way to handle
-  potentially overlapping messages
-
 ## Acknowledgments and prior work
 
 CFT suggested the use of metafeeds
 [in](https://github.com/arj03/ssb-observables/issues/1)
 
-[BIP32-Ed25519]: https://github.com/wallet-io/bip32-ed25519/blob/master/doc/Ed25519_BIP.pdf
-[ssb-secure-partial-replication]: https://github.com/ssb-ngi-pointer/ssb-secure-partial-replication
 [fusion identity]: https://github.com/ssb-ngi-pointer/fusion-identity-spec/
 [bencode]: https://en.wikipedia.org/wiki/Bencode
 [BFE]: https://github.com/ssbc/ssb-bfe-spec
 [bendy butt]: https://github.com/ssb-ngi-pointer/bendy-butt-spec
+[migration spec]: https://github.com/ssbc/ssb-meta-feeds-migration
