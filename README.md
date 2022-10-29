@@ -85,8 +85,11 @@ Here the application specific metadata `feedpurpose` is used.
 
 ### v1
 
-This section describes the specification of the organization of
-subfeeds under the `v1` versioning subfeed.
+While metafeeds is a general way to structure feeds into a tree, a
+particular way of organizing the tree is defined in this section. We
+use a `v1` versioning subfeed under the root metafeed and define the
+structure this must follow in this section. This allows an upgrade
+path to v2 or other structures in the future.
 
 To start with, the `v1` versioning subfeed **MUST** be created with
 the following `content` on the root metafeed:
