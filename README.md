@@ -372,8 +372,7 @@ with private groups to better ensure safety.
 
 ## Acknowledgments and prior work
 
-CFT suggested the use of metafeeds
-[in](https://github.com/arj03/ssb-observables/issues/1)
+CFT [suggested the use of metafeeds in connection to ssb-observables](https://github.com/arj03/ssb-observables/issues/1).
 
 [fusion identity]: https://github.com/ssb-ngi-pointer/fusion-identity-spec/
 [bencode]: https://en.wikipedia.org/wiki/Bencode
