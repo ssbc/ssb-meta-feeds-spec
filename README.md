@@ -6,7 +6,13 @@ SPDX-License-Identifier: CC-BY-4.0
 
 # SSB metafeed
 
+Version: 1.0
+
 Status: Ready for implementation
+
+Author: Anders Rune Jensen
+
+License: This work is licensed under a Creative Commons Attribution 4.0 International License.
 
 ## Abstract
 
