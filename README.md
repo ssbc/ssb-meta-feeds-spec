@@ -4,7 +4,7 @@ SPDX-FileCopyrightText: 2021 Anders Rune Jensen
 SPDX-License-Identifier: CC-BY-4.0
 -->
 
-# SSB metafeed
+# ssb-meta-feeds-spec
 
 Version: 1.0
 
