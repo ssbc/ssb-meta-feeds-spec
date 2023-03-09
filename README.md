@@ -6,6 +6,8 @@ SPDX-License-Identifier: CC-BY-4.0
 
 # ssb-meta-feeds-spec
 
+:warning: **THIS DOCUMENT WAS MOVED TO [SIP 2](https://github.com/ssbc/sips/blob/master/002.md)** :warning:
+
 Version: 1.0
 
 Status: Ready for implementation
